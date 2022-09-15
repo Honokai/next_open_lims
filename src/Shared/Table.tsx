@@ -9,12 +9,13 @@ import { TableRow } from "./TableRow";
 // import { useNavigate } from "react-router-dom";
 import { TableHead } from "./TableHead";
 import { TableFilters } from "./TableFilters";
+import { useRouter } from "next/router";
 
 const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
   const [ data, setData ] = React.useState<dataListType>({list: rowData ?? [], filteredList: rowData ?? [], new: []})
   const [ componentState, setComponentState ] = React.useState<TableStateProps>({loading: false, checkAll: false, checkBoxes: {} as GenericObjectKeyType, search: {} as GenericObjectKeyType, condition: {} as GenericObjectKeyType, ordering: {column: '', order: 'asc'}})
   const tableBody = React.useRef<HTMLDivElement|null>(null);
-  // const navigate = useNavigate()
+  const router = useRouter();
 
   // React.useEffect(() => {
   //   if(rowData)
@@ -134,8 +135,13 @@ const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searc
       if (v[1] === true)
         marked.push(Number(v[0]))
     })
-
-    // navigate("/sample/createv2", {state: { schedules: whereIn('id', marked, data.filteredList) ?? null}})
+    
+    router.push(
+      {
+        pathname: '/samples/createv2',
+        query: {data: marked}
+      }
+    )
   }
 
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)
