@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import { ThemeContextProvider } from "../contexts/useTheme";
+import { TableContextProvider } from "../contexts/useTable";
 import { Box } from "@mui/system";
 import { ScopedCssBaseline } from "@mui/material"
 import Head from "next/head";
@@ -19,7 +20,9 @@ const Layout = (props: LayoutProps) => {
         </Head>
         <Navbar/>
         <Box height="100vh" sx={{paddingTop: "4rem", overflow: "auto"}}>
-          {props.children}
+          <TableContextProvider>
+            {props.children}
+          </TableContextProvider>
         </Box>
       </ScopedCssBaseline>
     </ThemeContextProvider>

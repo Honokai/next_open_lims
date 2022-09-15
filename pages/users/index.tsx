@@ -18,14 +18,19 @@ const UserList = ({ users }: InferGetServerSidePropsType<typeof getServerSidePro
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    const res = await fetch(`http://api.teste.com/api/users`)
-    const data = await res.json()
-
-    return {
-        props: {
-            users: data
-        } 
+  const res = await fetch(`${process.env.REACT_APP_URL_API}/users`, {
+    headers: {
+      Authorization: `Bearer ${process.env.REACT_APP_TOKEN_API}`
     }
+  })
+
+  const data = await res.json()
+
+  return {
+    props: {
+      users: data
+    } 
+  }
 }
 
 export default UserList

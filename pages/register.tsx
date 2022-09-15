@@ -1,10 +1,9 @@
 import React, { ChangeEvent } from "react";
-import { Link as RouterLink} from "react-router-dom";
 import { Button, Card, CardContent, FormControl, Link, TextField, Typography } from "@mui/material";
-import Layout from "../Shared/Layout";
-import { ContainerFlexDivJustified, FlexCenteredDiv } from "../Shared/StyledTags";
-import { textFieldInterface } from "../../Helpers/TypeHelpers";
-import { validateEmail } from "../../Helpers/Validate";
+import Layout from "../src/Shared/Layout";
+import { textFieldInterface } from "../src/Helpers/TypeHelpers";
+import { validateEmail } from "../src/Helpers/Validate";
+import { ContainerFlexDivJustified, FlexCenteredDiv } from "../src/Shared/StyledTags";
 
 interface InputsProps {
   [key: string]: textFieldInterface
@@ -128,7 +127,7 @@ const Register = () => {
               />
             </div>
             <FlexCenteredDiv>
-              <Link sx={{margin: "0 .3rem"}} component={RouterLink} to={"/login"} variant="body2" underline="none">
+              <Link sx={{margin: "0 .3rem"}} href={"/login"} variant="body2" underline="none">
                 Already have an account? Sign in here
               </Link>
             </FlexCenteredDiv>

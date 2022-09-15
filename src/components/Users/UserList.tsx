@@ -3,8 +3,8 @@ import React from "react"
 import { useTable } from "../../contexts/useTable"
 import { useTema } from "../../contexts/useTheme"
 import { UserColumns } from "../../Helpers/UserColumns"
-import Layout from "../Shared/Layout"
-import Table from "../Shared/Table"
+import Layout from "../../Shared/Layout"
+import Table from "../../Shared/Table"
 
 const UserList = () => {
   const {setLoading} = useTable()

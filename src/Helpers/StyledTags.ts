@@ -12,7 +12,7 @@ export const DivContentTable = styled.div`
 ` 
 
 export const DivLikeTable = styled.div`
-  // height: 100%;
+  height: 100%;
   max-height: max-content;
   min-width: 500px;
   display: flex;

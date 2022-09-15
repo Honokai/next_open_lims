@@ -1,8 +1,7 @@
 import React, { ChangeEvent } from "react";
-import { Link as RouterLink} from "react-router-dom";
 import { Button, Card, CardContent, Link, TextField, Typography } from "@mui/material";
-import Layout from "../Shared/Layout";
-import { ContainerFlexDivJustified, FlexCenteredDiv } from "../Shared/StyledTags";
+import Layout from "../src/Shared/Layout";
+import { ContainerFlexDivJustified, FlexCenteredDiv } from "../src/Shared/StyledTags";
 
 interface InputsProps {
   username: {
@@ -86,10 +85,10 @@ const Login = () => {
               />
             </div>
             <FlexCenteredDiv>
-              <Link sx={{margin: "0 .3rem"}} component={RouterLink} to={"/register"} variant="body2" underline="none">
+              <Link sx={{margin: "0 .3rem"}} href="/register" variant="body2" underline="none">
                 Forgot password?
               </Link>|
-              <Link sx={{margin: "0 .3rem"}} component={RouterLink} to={"/register"} variant="body2" underline="none">
+              <Link sx={{margin: "0 .3rem"}} href="/register" variant="body2" underline="none">
                 Create account
               </Link>
             </FlexCenteredDiv>

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, ClickAwayListener, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Toolbar, Typography } from "@mui/material";
+import { AppBar, ClickAwayListener, Grow, IconButton, Link, MenuItem, MenuList, Paper, Popper, Toolbar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTema } from "../contexts/useTheme";
 import styled from "@emotion/styled";
@@ -21,74 +21,74 @@ const Navbar = () => {
   }
 
   return (
-    
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton 
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            ref={anchorRef}
-            onClick={handleMenu}
-          >
-            <MenuIcon/>
-          </IconButton>
-          <Popper
-            open={aberto}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement="bottom-start"
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === 'bottom-start' ? 'left top' : 'left bottom',
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={handleMenu}>
-                    <MenuList
-                      autoFocusItem={aberto}
-                      id="composition-menu"
-                      aria-labelledby="composition-button"
-                    >
-                      <MenuItem disableGutters>
-                          Sample
-                      </MenuItem>
-                      <MenuItem disableGutters onClick={handleMenu}>
-                          SubSample
-                      </MenuItem>
-                      <MenuItem disableGutters onClick={handleMenu}>
-                        Users
-                      </MenuItem>
-                      <MenuItem disableGutters onClick={handleMenu}>
-                          Tests
-                      </MenuItem>
-                      <MenuItem disableGutters>
-                          Login
-                      </MenuItem>
-                      <MenuItem onClick={() => {
-                        handleMenu()
-                        handleTheme()
-                      }}>
-                        Tema
-                      </MenuItem>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>{`${process.env.NEXT_PUBLIC_REACT_APP_NAME}`}</Typography>
-        </Toolbar>
-      </AppBar>
-    
+    <AppBar position="fixed">
+      <Toolbar>
+        <IconButton 
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          ref={anchorRef}
+          onClick={handleMenu}
+        >
+          <MenuIcon/>
+        </IconButton>
+        <Popper
+          open={aberto}
+          anchorEl={anchorRef.current}
+          role={undefined}
+          placement="bottom-start"
+          transition
+          disablePortal
+        >
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === 'bottom-start' ? 'left top' : 'left bottom',
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleMenu}>
+                  <MenuList
+                    autoFocusItem={aberto}
+                    id="composition-menu"
+                    aria-labelledby="composition-button"
+                  >
+                    <MenuItem>
+                      Sample
+                    </MenuItem>
+                    <MenuItem onClick={handleMenu}>
+                      SubSample
+                    </MenuItem>
+                    <MenuItem onClick={handleMenu}>
+                      Users
+                    </MenuItem>
+                    <MenuItem onClick={handleMenu}>
+                        Tests
+                    </MenuItem>
+                    <MenuItem component={Link} underline="none" href={"/login"} onClick={handleMenu}>
+                      Login
+                    </MenuItem>
+                    <MenuItem onClick={() => {
+                      handleMenu()
+                      handleTheme()
+                    }}>
+                      Tema
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          <Link underline="none" href={"/"}>{`${process.env.NEXT_PUBLIC_REACT_APP_NAME}`}</Link>
+        </Typography>
+      </Toolbar>
+    </AppBar>
   )
 }
 

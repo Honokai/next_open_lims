@@ -3,8 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField
 import { Container } from "@mui/system";
 import styled from "@emotion/styled";
 import { formatDateToISO } from "../../Helpers/Functions";
-import Layout from "../Shared/Layout";
-import { useLocation } from "react-router-dom";
+import Layout from "../../Shared/Layout";
 import { GenericObjectKeyType } from "../../Helpers/TypeHelpers";
 
 interface Inputs {
@@ -35,7 +34,6 @@ const CustomContainerStyles = {
 }
 
 const SampleCreate = () => {
-  const { state }: GenericObjectKeyType = useLocation();
   const [ value, setValue ] = React.useState<Inputs>({} as Inputs)
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)

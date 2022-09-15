@@ -6,7 +6,7 @@ import { GenericObjectKeyType } from "../../src/Helpers/TypeHelpers"
 import Layout from "../../src/Shared/Layout"
 import Table from "../../src/Shared/Table"
 
-export const CreateV2 = () => {
+const CreateV2 = () => {
   const [data, setData] = React.useState<GenericObjectKeyType[]>()
   const { query } = useRouter()
 
@@ -23,3 +23,5 @@ export const CreateV2 = () => {
     </Layout>
   )
 }
+
+export default CreateV2

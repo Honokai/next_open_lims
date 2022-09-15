@@ -5,7 +5,7 @@ import { GenericObjectKeyType } from "../../src/Helpers/TypeHelpers"
 import Layout from "../../src/Shared/Layout"
 import Table from "../../src/Shared/Table"
 
-export const CreateV2 = () => {
+export const Index = () => {
   const [data, setData] = React.useState<GenericObjectKeyType[]>();
 //   const { state }: GenericObjectKeyType = useLocation()
 
@@ -21,3 +21,5 @@ export const CreateV2 = () => {
     </Layout>
   )
 }
+
+export default Index

@@ -1,10 +1,10 @@
 import React from "react"
 import { Container, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
-import { PreSampleColumns } from "../Helpers/PreSampleColumns"
-import { DivContentTable, DivLikeRow } from "../Helpers/StyledTags"
-import Layout from "./Shared/Layout"
-import { FlexCenteredDiv } from "./Shared/StyledTags"
-import Table from "./Shared/Table"
+import { PreSampleColumns } from "../../src/Helpers/PreSampleColumns"
+import { DivContentTable, DivLikeRow, DivLikeTable } from "../../src/Helpers/StyledTags"
+import Layout from "../../src/Shared/Layout"
+import { ContainerFlexDivJustified } from "../../src/Shared/StyledTags"
+
 
 interface PreSampleCreateProps {
   analysis: {id: number, name: string}[]
@@ -12,17 +12,18 @@ interface PreSampleCreateProps {
   selectedClient: number
 }
 
-export const PreSampleCreate = () => {
+const PreSampleCreate = () => {
   const [data, setData] = React.useState<PreSampleCreateProps>({} as PreSampleCreateProps)
 
   React.useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL_API}/users`,{
+    fetch(`${process.env.NEXT_PUBLIC_REACT_APP_URL_API}/users`,{
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_TOKEN_API}`
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_REACT_APP_TOKEN_API}`
       }
     }).then((r) => {
       return r.json()
     }).then((json) => {
+      console.log(json)
       setData(
         {...data, clients: json }
       )
@@ -39,7 +40,9 @@ export const PreSampleCreate = () => {
   
   return (
     <Layout>
-      <Container maxWidth="md" sx={{height: "100%", padding: "3rem 0"}}>
+      {/* <Container maxWidth="md" sx={{height: "100%", padding: "3rem 0"}}> */}
+      <ContainerFlexDivJustified>
+        <div style={{width: "30%"}}>
         <DivLikeRow>
             <DivContentTable>
               Client
@@ -88,7 +91,11 @@ export const PreSampleCreate = () => {
         </DivLikeRow>
             <div>Analysis</div>
             <div>Description</div>
-      </Container>
+      {/* </Container> */}
+      </div>
+      </ContainerFlexDivJustified>
     </Layout>
   )
 }
+
+export default PreSampleCreate

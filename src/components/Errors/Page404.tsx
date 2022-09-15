@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material"
-import {HomeSharp as HomeIcon} from '@mui/icons-material';
-import { Link } from "react-router-dom"
-import { FlexCenteredDiv } from "../Shared/StyledTags"
+import {HomeSharp as HomeIcon} from '@mui/icons-material';  
+import { FlexCenteredDiv } from "../../Shared/StyledTags"
+import Link from "next/link";
 
 const Page404 = () => {
   return (
@@ -17,7 +17,7 @@ const Page404 = () => {
         <Typography variant="h4">
           Deserted place, inhabitants: 1
         </Typography>
-        <Button color="secondary" sx={{margin: "2rem 0"}} variant="contained" component={Link} to={"/"}>
+        <Button color="secondary" sx={{margin: "2rem 0"}} variant="contained" component={Link} href={"/"}>
           <Typography variant="h6">
             Go home
           </Typography>
