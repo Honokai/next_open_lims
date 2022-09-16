@@ -68,7 +68,7 @@ export const Tema = {
       palette: {
         mode: 'dark',
         secondary: {
-          main: '#898989',
+          main: '#E06D06',
         },
         background: {
           default: '#222'
