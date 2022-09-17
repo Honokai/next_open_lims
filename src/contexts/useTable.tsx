@@ -11,10 +11,6 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
   const [ tableContextState,setTableContextState ] = React.useState<TableContextStateProps>({loading: false, checkAll: false, checkBoxes: {} as GenericObjectKeyType, search: {} as GenericObjectKeyType, condition: {} as GenericObjectKeyType, ordering: {column: '', order: 'asc'}})
   const router = useRouter()
 
-  React.useEffect(()=> {
-    console.log("montei context")
-  }, [])
-
   React.useEffect(() => {
     if(Object.keys(tableContextState.search).length) {
       let dataCopy: Object[] = []
@@ -142,7 +138,7 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
 
   function loadTableData(d: Array<Object>)
   {
-    setTableData({...tableData, filteredList: d, list: d})
+    setTableData({...tableData, filteredList: d.slice(0, 50), list: d})
   }
 
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)

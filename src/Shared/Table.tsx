@@ -1,26 +1,26 @@
-import { Button, Dialog, DialogTitle, IconButton, List, ListItem, TextField } from "@mui/material";
+import { Button, Dialog, DialogTitle, List, ListItem, Modal, Paper, TextField } from "@mui/material";
 import Skeleton from '@mui/material/Skeleton';
 import React from "react";
-import { conditionalComparison, pluck, shouldOrder, whereIn } from "../Helpers/Functions";
-import { dataListType, DataPropsGeneric, GenericObjectKeyType, TableProps, TableStateProps } from "../Helpers/TypeHelpers";
+import { pluck } from "../Helpers/Functions";
+import { DataPropsGeneric, TableProps } from "../Helpers/TypeHelpers";
 import ButtonLoading from "./ButtonLoading";
 import { DivContentTable, DivLikeRow, DivLikeTable, DivLikeTbody} from "../Helpers/StyledTags";
 import { TableRow } from "./TableRow";
-// import { useNavigate } from "react-router-dom";
 import { TableHead } from "./TableHead";
 import { TableFilters } from "./TableFilters";
 import { useRouter } from "next/router";
-import { TableContextProvider, useTable } from "../contexts/useTable";
-import { OneK } from "@mui/icons-material";
+import { useTable } from "../contexts/useTable";
+import { Box } from "@mui/system";
 
 const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
   const {tableData, loadTableData, handleCheckbox, handleInputSearch, tableContextState} = useTable()
-  const tableBody = React.useRef<HTMLDivElement|null>(null);
+  const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
   const router = useRouter();
 
   React.useEffect(() => {
-    if (rowData)
+    if (rowData) {
       loadTableData(rowData)
+    }
   }, [])
 
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)
@@ -48,12 +48,32 @@ const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searc
       '/samples/createv2'
     )
   }
+
+  function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
+  {
+    if(shouldOpenSampleModal)
+      setTableState({...tableState, dialogOpen: !tableState.dialogOpen, createSampleModalOpen: !tableState.createSampleModalOpen})
+    else
+      setTableState({...tableState, dialogOpen: !tableState.dialogOpen})
+  }
+
+  function handleModalSample()
+  {
+    setTableState({...tableState, createSampleModalOpen: !tableState.createSampleModalOpen})
+  }
+
+  function inputHandler(e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
+  {
+    if(Number(e.currentTarget.value) <= 15)
+      setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
+  }
+
   return (
     <DivLikeTable>
       <div>
-      <Button sx={{margin: "0 .3rem"}} onClick={showChecked} variant="contained">Create sample</Button>
-      {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleDataAddition()} variant="contained">Save</Button> */}
-      <ButtonLoading/>
+        <Button sx={{margin: "0 .3rem"}} onClick={() => handleSampleQuantityDialog()} variant="contained">Create sample</Button>
+        {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleDataAddition()} variant="contained">Save</Button> */}
+        <ButtonLoading/>
       </div>
       <TableHead entity={entity}
         sortable={sortable}
@@ -66,7 +86,7 @@ const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searc
             showCheckbox={showCheckbox}
           /> : <></>
       }
-      <DivLikeTbody id="tableBody" ref={tableBody}>
+      <DivLikeTbody id="tableBody">
       {
         tableData?.filteredList.length > 0 ?
           pluck(['id', 'sample_type_id', 'internal_id', 'external_id'], tableData.filteredList).map((item: DataPropsGeneric, index) => (
@@ -95,19 +115,37 @@ const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searc
         </h5>
       </DivLikeRow>
       
-      <Dialog open={false}>
+      <Dialog open={tableState.dialogOpen} transitionDuration={100}>
         <DialogTitle>How many samples?</DialogTitle>
         <List>
           <ListItem sx={{display: "flex", justifyContent: "center"}}>
-            <TextField sx={{width: "10rem"}} size="small" defaultValue={"1"} type={"number"}/>
+            <TextField 
+              sx={{width: "10rem"}}
+              size="small"
+              onChange={inputHandler}
+              value={tableState.sampleQuantity}
+              type={"number"} InputProps={{ inputProps: { min: 0, max: 10 } }}
+            />
           </ListItem>
           <ListItem sx={{display: "flex", justifyContent: "center"}}>
-            <Button variant="contained">OK</Button>
+            <Button variant="contained" onClick={() => handleSampleQuantityDialog(true)}>OK</Button>
           </ListItem>
         </List>
-        
-        
       </Dialog>
+      <Modal
+        open={tableState.createSampleModalOpen}
+        onClose={handleModalSample}
+        sx={{display: "flex", justifyContent: "center", alignItems: "center"}}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box component={Paper} sx={{ width: 400 }}>
+          <h2 id="parent-modal-title">Text in a modal</h2>
+          <p id="parent-modal-description">
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </p>
+        </Box>
+      </Modal>
     </DivLikeTable>
   )
 }

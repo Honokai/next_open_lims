@@ -12,8 +12,8 @@ export const DivContentTable = styled.div`
 ` 
 
 export const DivLikeTable = styled.div`
-  height: 100%;
-  max-height: max-content;
+  min-height: 20%;
+  max-height: 100%;
   min-width: 500px;
   display: flex;
   margin: 0 1rem;

@@ -45,6 +45,11 @@ export const Tema = {
   light: createTheme({
       palette: {
         mode: 'light',
+        primary: {
+          main: "#E6B4B8",
+          dark: "#555",
+          light: "#fff"
+        },
         secondary: {
           main: '#135FD4',
         }

@@ -9,6 +9,7 @@ import { SampleColumns } from "../src/Helpers/SampleColumns"
 const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { setLoading } = useTable()
   const [data, setData] = React.useState(samples)
+  
 
   return (
     <Layout>
