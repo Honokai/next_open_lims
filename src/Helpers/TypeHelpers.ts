@@ -24,12 +24,13 @@ export interface OrderingProps {
 
 export interface TableContextProps {
   loading: boolean
-  data: dataListType
+  tableData: dataListType
   checkboxes: GenericObjectKeyType
-  searchParams: {[key: string]: any}
-  loadSearchParams: (statusFilter: Object) => void
-  ordering: (colunaFiltrada: string) => void
-  loadData: (data: Array<Object>) => void
+  tableContextState: TableContextStateProps
+  handleInputSearch: (e: string[]) => void
+  handleCheckbox: (event: React.ChangeEvent<HTMLInputElement>, all?: 'check'|'uncheck') => void
+  ordering: (colunaOrdenada: string) => void
+  loadTableData: (data: Array<Object>) => void
   setLoading: (p: boolean) => void
 }
 
@@ -75,10 +76,19 @@ export interface TableStateProps {
   ordering: {column: string, order: 'asc'|'desc'}
 }
 
+export interface TableContextStateProps {
+  loading: boolean
+  checkAll: boolean
+  checkBoxes: GenericObjectKeyType
+  search: GenericObjectKeyType
+  condition: GenericObjectKeyType
+  ordering: {column: string, order: 'asc'|'desc'}
+}
+
 export interface TableFiltersProps {
   entity: BaseColumn
   searchable?: boolean
   showCheckbox?: boolean
-  parentInputSearchHandler?: (e: string[]) => void
-  parentStateValues: TableStateProps
+  // parentInputSearchHandler?: (e: string[]) => void
+  // parentStateValues: TableStateProps
 }

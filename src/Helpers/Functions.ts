@@ -75,3 +75,20 @@ export function whereIn(property: string, arrayValues: number[], listOfObjects: 
 
   return r
 }
+
+export function pluck(keysAccepted: string[], objectArray: GenericObjectKeyType[])
+{
+  let onlyKeysAccepted: GenericObjectKeyType[] = []
+
+  objectArray.forEach((item, index) => {
+    let momentItem: GenericObjectKeyType = {}
+
+    Object.keys(item).filter((key) => keysAccepted.includes(key)).forEach((el, i) => {
+      momentItem[el]= item[el]
+    })
+
+    onlyKeysAccepted.push(momentItem)
+  })
+
+  return onlyKeysAccepted
+}

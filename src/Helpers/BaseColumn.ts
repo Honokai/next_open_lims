@@ -1,6 +1,7 @@
 import { DataFieldType, GenericObjectKeyType } from "./TypeHelpers"
 
 export class BaseColumn {
+  public onlySpecificKeys: string[] = []
   public conditionFilter: string[] = ['contains', 'starts_with', 'ends_with', 'equal', 'not_equal']
   public dataFields: DataFieldType[]
 
@@ -27,4 +28,5 @@ export class BaseColumn {
     })
     return r
   }
+
 }

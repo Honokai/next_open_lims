@@ -1,5 +1,6 @@
 import { ArrowDownward } from "@mui/icons-material"
 import { Checkbox, IconButton } from "@mui/material"
+import { useTable } from "../contexts/useTable"
 import { BaseColumn } from "../Helpers/BaseColumn"
 import { DivLikeThead, DivContentTable } from "../Helpers/StyledTags"
 
@@ -7,12 +8,12 @@ interface TableHeadProps {
   entity: BaseColumn
   sortable?: boolean
   showCheckbox?: boolean
-  allCheckboxChecked?: boolean
   checkBoxHandler?: (event: React.ChangeEvent<HTMLInputElement>, all?: 'check'|'uncheck') => void
   orderingHandler?: (columnName: string) => void
 }
 
-export const TableHead = ({ showCheckbox, allCheckboxChecked, entity, checkBoxHandler, sortable, orderingHandler }: TableHeadProps) => {
+export const TableHead = ({ showCheckbox, entity, checkBoxHandler, sortable, orderingHandler }: TableHeadProps) => {
+  const {tableContextState, handleCheckbox, ordering} = useTable()
   return (
     <DivLikeThead>
       {
@@ -20,12 +21,9 @@ export const TableHead = ({ showCheckbox, allCheckboxChecked, entity, checkBoxHa
           <div>
             <Checkbox
               key={`all`}
-              value={allCheckboxChecked}
+              value={tableContextState.checkAll}
               onChange={(e) => {
-                if (checkBoxHandler !== undefined) {
-                  console.log('cliquei no check', allCheckboxChecked)
-                  checkBoxHandler(e, allCheckboxChecked ? 'uncheck' : 'check')
-                }
+                handleCheckbox(e, tableContextState.checkAll ? 'uncheck' : 'check')
               }
               }
               inputProps={{ 'aria-label': 'controlled' }}
@@ -44,8 +42,8 @@ export const TableHead = ({ showCheckbox, allCheckboxChecked, entity, checkBoxHa
                     component="label"
                     key={`${columnName.field}[button]`}
                     size="small" onClick={() => {
-                      if (orderingHandler)
-                        orderingHandler(columnName.field)
+                      if (ordering)
+                        ordering(columnName.field)
                       }}
                   >
                     <ArrowDownward/>

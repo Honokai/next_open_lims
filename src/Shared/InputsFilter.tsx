@@ -40,9 +40,9 @@ export const InputFilter = ({ columnName, parentChangeHandler, selectValue, inpu
   }
 
   return(
-    <div style={{flex: "2"}}>
-      <FormControl sx={{ display: "flex", flex: 1, margin: "0 .4rem" }} size="small">
+    <div style={{display: "flex", flex: "2", flexDirection: "column", padding: "0 .6rem"}}>
         <Select
+          size="small"
           id={`condition[${columnName}]`}
           name={`${columnName.field}`}
           value={searchInput.condition}
@@ -56,10 +56,8 @@ export const InputFilter = ({ columnName, parentChangeHandler, selectValue, inpu
           <MenuItem value={"ends_with"}>Ends with</MenuItem>
           <MenuItem value={"not_equal"}>Not equal</MenuItem>
         </Select>
-      </FormControl>
       <TextField
         name={`${columnName.field}`}
-        sx={{margin: "0 .4rem"}}
         size="small" placeholder={`${columnName.display}`}
         value={searchInput.field}
         onChange={(e) => handleChange(e)}

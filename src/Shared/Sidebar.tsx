@@ -1,6 +1,6 @@
+import React from "react";
 import { ChevronLeft, ExpandLess, ExpandMore, FolderCopyRounded, InboxRounded, StarBorder } from "@mui/icons-material";
 import {Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
-import React from "react";
 import { GenericObjectKeyType } from "../Helpers/TypeHelpers";
 
 interface SidebarProps {

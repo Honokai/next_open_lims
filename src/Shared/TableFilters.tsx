@@ -1,8 +1,10 @@
+import { useTable } from "../contexts/useTable"
 import { DivLikeThead, DivContentTable } from "../Helpers/StyledTags"
 import { TableFiltersProps } from "../Helpers/TypeHelpers"
 import { InputFilter } from "./InputsFilter"
 
-export const TableFilters = ({searchable, entity, showCheckbox, parentInputSearchHandler, parentStateValues}: TableFiltersProps) => {
+export const TableFilters = ({searchable, entity, showCheckbox}: TableFiltersProps) => {
+  const {tableContextState, handleInputSearch} = useTable()
   return (
     <DivLikeThead>
       {
@@ -15,11 +17,11 @@ export const TableFilters = ({searchable, entity, showCheckbox, parentInputSearc
           if(columnName.showFilter) {
             return (
               <InputFilter
-                selectValue={parentStateValues.condition[columnName.field] ?? ""}
-                inputValue={parentStateValues.search[columnName.field] ?? ""}
+                selectValue={tableContextState.condition[columnName.field] ?? ""}
+                inputValue={tableContextState.search[columnName.field] ?? ""}
                 parentChangeHandler={(e) => {
-                  if(parentInputSearchHandler)
-                    parentInputSearchHandler(e)
+                  if(handleInputSearch)
+                    handleInputSearch(e)
                   }
                 } 
                 key={`inputFilter[${columnName.field}]`}

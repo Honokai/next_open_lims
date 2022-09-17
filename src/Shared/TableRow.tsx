@@ -1,5 +1,6 @@
 import { Checkbox, TextField } from "@mui/material"
 import React, { MouseEventHandler } from "react"
+import { useTable } from "../contexts/useTable"
 import { DivContentTable, DivLikeRow } from "../Helpers/StyledTags"
 import { DataPropsGeneric } from "../Helpers/TypeHelpers"
 
@@ -13,8 +14,9 @@ interface RowProps {
   contentEditableHandler?: (id: number, column: string, value: string, createNew?: boolean) => void
 }
 
-export const TableRow = ({showCheckbox, index, item, handleCheckBox, checked, editable, contentEditableHandler}: RowProps) => {
+export const TableRow = ({showCheckbox, index, item, checked, editable, contentEditableHandler}: RowProps) => {
   const [dataEditable, setDataEditable] = React.useState({column: "", value: ""})
+  const {handleCheckbox, tableContextState} = useTable()
   const [timer, setTimer] = React.useState(0)
 
   function onDoubleClick(p: string, val: string)
@@ -50,7 +52,6 @@ export const TableRow = ({showCheckbox, index, item, handleCheckBox, checked, ed
     
         setTimer(t)
       }
-      
     }
   }
 
@@ -64,10 +65,10 @@ export const TableRow = ({showCheckbox, index, item, handleCheckBox, checked, ed
               key={`checkbox[${index}]`}
               id={`${item['id']}`}
               value={item['id']}
-              checked={checked ?? false}
+              checked={tableContextState.checkBoxes[`${item['id']}`] ?? false}
               onChange={(e) => {
-                if(handleCheckBox)
-                  handleCheckBox(e)
+                if(handleCheckbox)
+                  handleCheckbox(e)
                 }
               }
               inputProps={{ 'aria-label': 'controlled' }}
@@ -89,7 +90,7 @@ export const TableRow = ({showCheckbox, index, item, handleCheckBox, checked, ed
                 />
               </DivContentTable>
             )
-          } else {
+          } else if(typeof v[1] !== 'object') {
             return (
               <DivContentTable onDoubleClick={(e) => onDoubleClick(v[0], e.currentTarget.innerHTML)} key={`rowContent[${index}][${i}]`} id={`${v[0]}[${item.id}][${i}]`}>
                 {v[1]}
