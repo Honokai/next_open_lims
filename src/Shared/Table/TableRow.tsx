@@ -1,8 +1,8 @@
 import { Checkbox, TextField } from "@mui/material"
 import React, { MouseEventHandler } from "react"
-import { useTable } from "../contexts/useTable"
-import { DivContentTable, DivLikeRow } from "../Helpers/StyledTags"
-import { DataPropsGeneric } from "../Helpers/TypeHelpers"
+import { useTable } from "../../contexts/useTable"
+import { DivContentTable, DivLikeRow } from "../../Helpers/StyledTags"
+import { DataPropsGeneric } from "../../Helpers/TypeHelpers"
 
 interface RowProps {
   showCheckbox?: boolean

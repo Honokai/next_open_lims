@@ -1,18 +1,18 @@
 import { Button, Dialog, DialogTitle, List, ListItem, Modal, Paper, TextField } from "@mui/material";
 import Skeleton from '@mui/material/Skeleton';
 import React from "react";
-import { pluck } from "../Helpers/Functions";
-import { DataPropsGeneric, TableProps } from "../Helpers/TypeHelpers";
-import ButtonLoading from "./ButtonLoading";
-import { DivContentTable, DivLikeRow, DivLikeTable, DivLikeTbody} from "../Helpers/StyledTags";
+import { pluck } from "../../Helpers/Functions";
+import { DataPropsGeneric, TableProps } from "../../Helpers/TypeHelpers";
+import ButtonLoading from "../ButtonLoading";
+import { DivContentTable, DivLikeRow, DivLikeTable, DivLikeTbody} from "../../Helpers/StyledTags";
 import { TableRow } from "./TableRow";
 import { TableHead } from "./TableHead";
 import { TableFilters } from "./TableFilters";
 import { useRouter } from "next/router";
-import { useTable } from "../contexts/useTable";
+import { useTable } from "../../contexts/useTable";
 import { Box } from "@mui/system";
 
-const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
+const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
   const {tableData, loadTableData, handleCheckbox, handleInputSearch, tableContextState} = useTable()
   const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
   const router = useRouter();
@@ -150,4 +150,4 @@ const Table = ({ rowData, sortable, theme, showCheckbox, entity, editable, searc
   )
 }
 
-export default Table
+export default TableBody

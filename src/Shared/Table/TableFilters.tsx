@@ -1,7 +1,7 @@
-import { useTable } from "../contexts/useTable"
-import { DivLikeThead, DivContentTable } from "../Helpers/StyledTags"
-import { TableFiltersProps } from "../Helpers/TypeHelpers"
-import { InputFilter } from "./InputsFilter"
+import { useTable } from "../../contexts/useTable"
+import { DivLikeThead, DivContentTable } from "../../Helpers/StyledTags"
+import { TableFiltersProps } from "../../Helpers/TypeHelpers"
+import { InputFilter } from "../InputsFilter"
 
 export const TableFilters = ({searchable, entity, showCheckbox}: TableFiltersProps) => {
   const {tableContextState, handleInputSearch} = useTable()

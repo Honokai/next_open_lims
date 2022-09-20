@@ -2,7 +2,7 @@ import React from "react"
 import { Container } from "@mui/system"
 import { useTable } from "../src/contexts/useTable"
 import Layout from "../src/Shared/Layout"
-import Table from "../src/Shared/Table"
+import TableBody from "../src/Shared/Table/TableBody"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { SampleColumns } from "../src/Helpers/SampleColumns"
 
@@ -14,7 +14,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
   return (
     <Layout>
       <Container maxWidth="xl" sx={{height: "100%", padding: "3rem 0"}}>
-        <Table entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
+        <TableBody entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
       </Container>
     </Layout>
   )
