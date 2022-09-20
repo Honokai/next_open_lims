@@ -31,7 +31,6 @@ export const TableRow = ({showCheckbox, index, item, checked, editable, contentE
 
   function onBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>, id: number)
   {
-    console.log('iiii')
     if (contentEditableHandler !== undefined) {
       if (id > 0) {
         clearTimeout(timer)
