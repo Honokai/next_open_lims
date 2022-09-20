@@ -1,8 +1,8 @@
 import { ArrowDownward } from "@mui/icons-material"
 import { Checkbox, IconButton } from "@mui/material"
-import { useTable } from "../contexts/useTable"
-import { BaseColumn } from "../Helpers/BaseColumn"
-import { DivLikeThead, DivContentTable } from "../Helpers/StyledTags"
+import { useTable } from "../../contexts/useTable"
+import { BaseColumn } from "../../Helpers/BaseColumn"
+import { DivLikeThead, DivContentTable } from "../../Helpers/StyledTags"
 
 interface TableHeadProps {
   entity: BaseColumn
