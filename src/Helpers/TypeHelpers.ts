@@ -42,7 +42,7 @@ export interface dataListType {
 
 export interface TableProps {
   entity: BaseColumn
-  columnHeaders?: Array<string>
+  header: Array<DataFieldType>
   rowData?: Array<Object>
   sortable?: boolean
   theme?: "light"|"dark"
@@ -86,7 +86,7 @@ export interface TableContextStateProps {
 }
 
 export interface TableFiltersProps {
-  entity: BaseColumn
+  columns: DataFieldType[]
   searchable?: boolean
   showCheckbox?: boolean
   // parentInputSearchHandler?: (e: string[]) => void

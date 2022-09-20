@@ -92,3 +92,16 @@ export function pluck(keysAccepted: string[], objectArray: GenericObjectKeyType[
 
   return onlyKeysAccepted
 }
+
+export function getValuesFromPropertie(field: string, objectArray: GenericObjectKeyType[]): string[]
+{
+  let onlyKeysAccepted: string[] = []
+
+  objectArray.forEach((item, index) => {
+    Object.keys(item).filter((key) => field == key).forEach((el, i) => {
+      onlyKeysAccepted.push(item[el])
+    })
+  })
+
+  return onlyKeysAccepted
+}

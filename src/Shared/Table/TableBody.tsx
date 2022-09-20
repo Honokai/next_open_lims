@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogTitle, List, ListItem, Modal, Paper, TextField } from "@mui/material";
 import Skeleton from '@mui/material/Skeleton';
 import React from "react";
-import { pluck } from "../../Helpers/Functions";
+import { getValuesFromPropertie, pluck } from "../../Helpers/Functions";
 import { DataPropsGeneric, TableProps } from "../../Helpers/TypeHelpers";
 import ButtonLoading from "../ButtonLoading";
 import { DivContentTable, DivLikeRow, DivLikeTable, DivLikeTbody} from "../../Helpers/StyledTags";
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useTable } from "../../contexts/useTable";
 import { Box } from "@mui/system";
 
-const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
+const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable, header }: TableProps) => {
   const {tableData, loadTableData, handleCheckbox, handleInputSearch, tableContextState} = useTable()
   // const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
   const router = useRouter();
@@ -73,13 +73,15 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
         {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleDataAddition()} variant="contained">Save</Button> */}
         <ButtonLoading/>
       </div>
-      <TableHead entity={entity}
+      <TableHead
+        columnHeaders={header}
         sortable={sortable}
         showCheckbox={showCheckbox}
       />
       { 
         searchable ?
-          <TableFilters entity={entity}
+          <TableFilters 
+            columns={header}
             searchable={searchable}
             showCheckbox={showCheckbox}
           /> : <></>
@@ -87,7 +89,7 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
       <DivLikeTbody id="tableBody">
       {
         tableData?.filteredList.length > 0 ?
-          pluck(['id', 'sample_type_id', 'internal_id', 'external_id'], tableData.filteredList).map((item: DataPropsGeneric, index) => (
+          pluck(getValuesFromPropertie('field', Object.values(header)), tableData.filteredList).map((item: DataPropsGeneric, index) => (
             <TableRow
               editable={editable}
               key={`row[${index}]`} 

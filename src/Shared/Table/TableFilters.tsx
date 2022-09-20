@@ -3,7 +3,7 @@ import { DivLikeThead, DivContentTable } from "../../Helpers/StyledTags"
 import { TableFiltersProps } from "../../Helpers/TypeHelpers"
 import { InputFilter } from "../InputsFilter"
 
-export const TableFilters = ({searchable, entity, showCheckbox}: TableFiltersProps) => {
+export const TableFilters = ({searchable, columns, showCheckbox}: TableFiltersProps) => {
   const {tableContextState, handleInputSearch} = useTable()
   return (
     <DivLikeThead>
@@ -13,7 +13,7 @@ export const TableFilters = ({searchable, entity, showCheckbox}: TableFiltersPro
         ): ""
       }
       {
-        entity.getDataFields().map((columnName) => {
+        columns.map((columnName) => {
           if(columnName.showFilter) {
             return (
               <InputFilter
