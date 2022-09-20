@@ -14,7 +14,7 @@ import { Box } from "@mui/system";
 
 const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable }: TableProps) => {
   const {tableData, loadTableData, handleCheckbox, handleInputSearch, tableContextState} = useTable()
-  const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
+  // const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
   const router = useRouter();
 
   React.useEffect(() => {
@@ -26,10 +26,8 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)
   {
     console.log(idItem, column, value, createNew)
-    // let d = data.filteredList.forEach(i => {
-    //   console.log(i)
-    // })
   }
+
   function showChecked()
   {
     let marked: number[] = []
@@ -49,29 +47,29 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
     )
   }
 
-  function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
-  {
-    if(shouldOpenSampleModal)
-      setTableState({...tableState, dialogOpen: !tableState.dialogOpen, createSampleModalOpen: !tableState.createSampleModalOpen})
-    else
-      setTableState({...tableState, dialogOpen: !tableState.dialogOpen})
-  }
+  // function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
+  // {
+  //   if(shouldOpenSampleModal)
+  //     setTableState({...tableState, dialogOpen: !tableState.dialogOpen, createSampleModalOpen: !tableState.createSampleModalOpen})
+  //   else
+  //     setTableState({...tableState, dialogOpen: !tableState.dialogOpen})
+  // }
 
-  function handleModalSample()
-  {
-    setTableState({...tableState, createSampleModalOpen: !tableState.createSampleModalOpen})
-  }
+  // function handleModalSample()
+  // {
+  //   setTableState({...tableState, createSampleModalOpen: !tableState.createSampleModalOpen})
+  // }
 
-  function inputHandler(e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
-  {
-    if(Number(e.currentTarget.value) <= 15)
-      setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
-  }
+  // function inputHandler(e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
+  // {
+  //   if(Number(e.currentTarget.value) <= 15)
+  //     setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
+  // }
 
   return (
     <DivLikeTable>
       <div>
-        <Button sx={{margin: "0 .3rem"}} onClick={() => handleSampleQuantityDialog()} variant="contained">Create sample</Button>
+        {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleSampleQuantityDialog()} variant="contained">Create sample</Button> */}
         {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleDataAddition()} variant="contained">Save</Button> */}
         <ButtonLoading/>
       </div>
@@ -115,7 +113,7 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
         </h5>
       </DivLikeRow>
       
-      <Dialog open={tableState.dialogOpen} transitionDuration={100}>
+      {/* <Dialog open={tableState.dialogOpen} transitionDuration={100}>
         <DialogTitle>How many samples?</DialogTitle>
         <List>
           <ListItem sx={{display: "flex", justifyContent: "center"}}>
@@ -145,7 +143,7 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
             Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
           </p>
         </Box>
-      </Modal>
+      </Modal> */}
     </DivLikeTable>
   )
 }

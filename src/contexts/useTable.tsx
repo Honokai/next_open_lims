@@ -64,7 +64,6 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
 
   function handleCheckbox(event: React.ChangeEvent<HTMLInputElement>, all?: 'check'|'uncheck') {
     if (event && !all) {
-      console.log("item")
       setTableContextState({
         ...tableContextState,
         checkBoxes: {
@@ -72,7 +71,6 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
           [event.currentTarget.id]: event.currentTarget.checked}
       })
     } else {
-      console.log("item 2")
       let checkBoxesCopy = Object.assign({}, tableContextState.checkBoxes)
 
       let allCheckBoxes: NodeListOf<HTMLInputElement>  = document.querySelectorAll("input[type='checkbox'][id]")
@@ -144,9 +142,6 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)
   {
     console.log(idItem, column, value, createNew)
-    // let d = tableData.filteredList.forEach(i => {
-    //   console.log(i)
-    // })
   }
 
   return(

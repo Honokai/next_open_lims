@@ -34,7 +34,6 @@ const PreSampleCreate = () => {
 
   function handleChange(event: SelectChangeEvent)
   {
-    console.log(event.target.value)
     setData({...data, selectedClient: Number(event.target.value)})
   }
   

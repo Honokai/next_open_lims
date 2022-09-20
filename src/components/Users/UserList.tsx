@@ -4,7 +4,7 @@ import { useTable } from "../../contexts/useTable"
 import { useTema } from "../../contexts/useTheme"
 import { UserColumns } from "../../Helpers/UserColumns"
 import Layout from "../../Shared/Layout"
-import Table from "../../Shared/Table"
+import TableBody from "../../Shared/Table/TableBody"
 
 const UserList = () => {
   const {setLoading} = useTable()
@@ -31,7 +31,7 @@ const UserList = () => {
   return (
     <Layout>
       <Container sx={{height: "100%", padding: "3rem 0"}}>
-        <Table entity={new UserColumns()} showCheckbox sortable={true} rowData={data} theme={theme}/>
+        <TableBody entity={new UserColumns()} showCheckbox sortable={true} rowData={data} theme={theme}/>
       </Container>
     </Layout>
   )
