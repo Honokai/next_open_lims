@@ -17,7 +17,6 @@ const Navbar = () => {
   function handleDrawer()
   {
     setMenuStatus({...menuStatus, drawerOpen: !menuStatus.drawerOpen})
-    console.log("abrir")
   }
 
   return (
