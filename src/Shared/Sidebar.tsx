@@ -16,7 +16,7 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
     setSection({...section, [expandSection]: !section[expandSection]})
   }
   return (
-    <div style={{backgroundColor: "#525", zIndex: "1500", display: "flex", flexDirection: "column", width: open ? "240px" : "0", overflow: "hidden", height: "100vh", position: "absolute", top: "0", left: "0", transition: "ease-in-out 500ms", }}>
+    <div style={{backgroundColor: "#121212", zIndex: "1500", display: "flex", flexDirection: "column", width: open ? "240px" : "0", overflow: "hidden", height: "100vh", position: "absolute", top: "0", left: "0", transition: "ease-in-out 500ms", }}>
       <div style={{display: "flex", justifyContent: "flex-end"}}>
         <IconButton onClick={handleDrawer}>
           <ChevronLeft/>

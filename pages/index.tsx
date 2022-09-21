@@ -46,34 +46,35 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
   function makeRows()
   {
     let rows = []
-    for (let index = 0; index < tableState.sampleQuantity; index++) {
+    for (let index = 1; index <= tableState.sampleQuantity; index++) {
       rows.push(
-        <DivLikeRow style={{margin: ".2rem 0"}}>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+        <DivLikeRow style={{margin: ".2rem 0", justifyContent: "center", alignItems: "center"}}>
+          #{index}
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+            <TextField size="small" variant="standard" placeholder="Teste" onContextMenu={(e) => {e.preventDefault(); alert("toma esse alerta")}}/>
+          </DivContentTable>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
-            <TextField size="small" variant="standard" placeholder="Teste"/>
-          </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem"}}>
+          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
         </DivLikeRow>
@@ -116,39 +117,42 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
           aria-labelledby="parent-modal-title"
           aria-describedby="parent-modal-description"
         >
-          <Box component={Paper} sx={{ width: "1000px", wordBreak: "break-word", height: 500, padding: 1 }}>
+          <Box component={Paper} sx={{ width: "1000px", height: "auto", padding: 1 }}>
             <div style={{display: "flex", flexDirection: "column"}}>
               <div style={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Client document
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Client name
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Client e-mail
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Date received
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Received by
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Date collected
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Vol/Mass
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Un
                 </DivContentTable>
-                <DivContentTable style={{margin: "0 .1rem"}}>
+                <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
                   Analysis
                 </DivContentTable>
               </div>
               <div style={{display: "flex", flexDirection: "column"}}>
                 {makeRows()}
+              </div>
+              <div>
+                <Button variant="contained">Save</Button>
               </div>
             </div>
           </Box>
