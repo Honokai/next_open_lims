@@ -77,7 +77,7 @@ export const TableRow = ({showCheckbox, index, item, checked, editable, contentE
       }
       {
         Object.entries(item).map((v, i) => {
-          if (dataEditable.column === v[0]) {
+          if (dataEditable.column === v[0] && editable) {
             return (
               <DivContentTable key={`rowContent[${index}][${i}]`} id={`${v[0]}[${item.id ?? index}][${i}]`}>
                 <TextField

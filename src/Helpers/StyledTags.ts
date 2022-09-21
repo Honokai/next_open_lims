@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const DivContentTable = styled.div`
   flex: 2 2 0px;
   display: flex;
+  max-height: 1.7rem;
   justify-content: center;
   align-items: center;
   word-break: break-all;
@@ -13,8 +14,8 @@ export const DivContentTable = styled.div`
 
 export const DivLikeTable = styled.div`
   min-height: 20%;
-  max-height: 100%;
-  min-width: 500px;
+  max-height: 90%;
+  min-width: 400px;
   display: flex;
   margin: 0 1rem;
   padding: .5rem 1rem;
