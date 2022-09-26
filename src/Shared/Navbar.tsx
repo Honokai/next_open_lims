@@ -34,7 +34,9 @@ const Navbar = () => {
             <MenuIcon/>
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            <Link underline="none" href={"/"}>{`${process.env.NEXT_PUBLIC_REACT_APP_NAME}`}</Link>
+            <Link underline="none" href={"/"} sx={{color: "primary.contrastText"}}>
+              {`${process.env.NEXT_PUBLIC_REACT_APP_NAME}`}
+            </Link>
           </Typography>
           <IconButton 
             size="large"

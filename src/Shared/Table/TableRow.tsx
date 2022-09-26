@@ -62,6 +62,7 @@ export const TableRow = ({showCheckbox, index, item, checked, editable, contentE
             <Checkbox
               disableRipple
               key={`checkbox[${index}]`}
+              sx={{'&.Mui-checked': {color: "buttons.main"}}}
               id={`${item['id']}`}
               value={item['id']}
               checked={tableContextState.checkBoxes[`${item['id']}`] ?? false}

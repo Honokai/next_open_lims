@@ -11,7 +11,7 @@ import { DivContentTable, DivLikeRow, DivLikeTable } from "../src/Helpers/Styled
 
 const Columns: DataFieldType[] = [
   {field: 'id', display: 'ID', showFilter: true},
-  {field: 'sample_type_id', display: 'Sample Type', showFilter: true},
+  {field: 'sample_type', display: 'Sample Type', showFilter: true},
   {field: 'internal_id', display: 'Internal  ID', showFilter: true},
   {field: 'external_id', display: 'External  ID', showFilter: false},
   // {field: 'customer_id', display: 'Customer ID', showFilter: false},
@@ -50,31 +50,31 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
       rows.push(
         <DivLikeRow style={{margin: ".2rem 0", justifyContent: "center", alignItems: "center"}}>
           #{index}
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste" onContextMenu={(e) => {e.preventDefault(); alert("toma esse alerta")}}/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
-          <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>
+          <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
             <TextField size="small" variant="standard" placeholder="Teste"/>
           </DivContentTable>
         </DivLikeRow>
@@ -88,7 +88,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
     <Layout>
       <Container maxWidth="xl" sx={{height: "100%", padding: "1rem 0"}}>
         <div style={{margin: ".2rem 1rem"}}>
-          <Button onClick={() => handleSampleQuantityDialog()} variant="contained">Create sample</Button>
+          <Button onClick={() => handleSampleQuantityDialog()} color="buttons" variant="contained">Create sample</Button>
         </div>
         <TableBody header={Columns} entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
 
@@ -100,7 +100,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
                 sx={{width: "10rem"}}
                 size="small"
                 onChange={inputHandler}
-                value={tableState.sampleQuantity ?? 1}
+                value={tableState.sampleQuantity ? tableState.sampleQuantity : ""}
                 type={"number"}
               />
             </ListItem>
@@ -117,7 +117,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
           aria-labelledby="parent-modal-title"
           aria-describedby="parent-modal-description"
         >
-          <Box component={Paper} sx={{ width: "1000px", height: "auto", padding: 1 }}>
+          <Box component={Paper} sx={{ minWidth: "300px", maxWidth: "95%", height: "auto", padding: 1 }}>
             <div style={{display: "flex", flexDirection: "column"}}>
               <div style={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
                 <DivContentTable style={{margin: "0 .1rem", wordBreak: "break-word"}}>

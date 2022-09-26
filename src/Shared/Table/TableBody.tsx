@@ -1,4 +1,3 @@
-import { Button, Dialog, DialogTitle, List, ListItem, Modal, Paper, TextField } from "@mui/material";
 import Skeleton from '@mui/material/Skeleton';
 import React from "react";
 import { getValuesFromPropertie, pluck } from "../../Helpers/Functions";
@@ -10,11 +9,9 @@ import { TableHead } from "./TableHead";
 import { TableFilters } from "./TableFilters";
 import { useRouter } from "next/router";
 import { useTable } from "../../contexts/useTable";
-import { Box } from "@mui/system";
 
 const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, searchable, header }: TableProps) => {
   const {tableData, loadTableData, handleCheckbox, handleInputSearch, tableContextState} = useTable()
-  // const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1})
   const router = useRouter();
 
   React.useEffect(() => {
@@ -47,30 +44,10 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
     )
   }
 
-  // function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
-  // {
-  //   if(shouldOpenSampleModal)
-  //     setTableState({...tableState, dialogOpen: !tableState.dialogOpen, createSampleModalOpen: !tableState.createSampleModalOpen})
-  //   else
-  //     setTableState({...tableState, dialogOpen: !tableState.dialogOpen})
-  // }
-
-  // function handleModalSample()
-  // {
-  //   setTableState({...tableState, createSampleModalOpen: !tableState.createSampleModalOpen})
-  // }
-
-  // function inputHandler(e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
-  // {
-  //   if(Number(e.currentTarget.value) <= 15)
-  //     setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
-  // }
 
   return (
     <DivLikeTable>
       <div>
-        {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleSampleQuantityDialog()} variant="contained">Create sample</Button> */}
-        {/* <Button sx={{margin: "0 .3rem"}} onClick={() => handleDataAddition()} variant="contained">Save</Button> */}
         <ButtonLoading/>
       </div>
       <TableHead

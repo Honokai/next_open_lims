@@ -22,6 +22,7 @@ export const TableHead = ({ showCheckbox, checkBoxHandler, sortable, orderingHan
           <div>
             <Checkbox
               key={`all`}
+              sx={{'&.Mui-checked': {color: "buttons.main"}}}
               value={tableContextState.checkAll}
               onChange={(e) => {
                 handleCheckbox(e, tableContextState.checkAll ? 'uncheck' : 'check')

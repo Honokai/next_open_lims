@@ -1,7 +1,21 @@
 import { ThemeProvider } from "@emotion/react";
-import { createTheme } from "@mui/material";
+import { createTheme, PaletteColor, PaletteColorOptions } from "@mui/material";
 import React from "react";
 import { ProviderProps } from "../Helpers/TypeHelpers";
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    sidebar: PaletteColor;
+    table: PaletteColor;
+    buttons: PaletteColor;
+  }
+  // allow configuration using `createTheme`
+  interface PaletteOptions {
+    sidebar: PaletteColorOptions;
+    table: PaletteColorOptions;
+    buttons: PaletteColorOptions;
+  }
+}
 
 interface ContextProps {
   theme: "light"|"dark"
@@ -11,7 +25,7 @@ interface ContextProps {
 export const ThemeContext = React.createContext<ContextProps>({} as ContextProps)
 
 export const ThemeContextProvider = ({children}: ProviderProps) => {
-  const [ theme, setTheme ] = React.useState<"light"|"dark">("dark");
+  const [ theme, setTheme ] = React.useState<"light"|"dark">("light");
 
   React.useEffect(() => {
     if(typeof window !== 'undefined')
@@ -46,12 +60,28 @@ export const Tema = {
       palette: {
         mode: 'light',
         primary: {
-          main: "#E6B4B8",
+          main: "#EFEFF1",
           dark: "#555",
-          light: "#fff"
+          light: "#329D8E",
+          contrastText: "#010101"
+        },
+        text: {
+          primary: '#131313;',
         },
         secondary: {
           main: '#135FD4',
+        },
+        sidebar: {
+          main: "#9CDECE"
+        },
+        table: {
+          main: "#EFEFF1"
+        },
+        buttons: {
+          main: "#7E4E8E",
+          dark: "#59266C",
+          light: "#C08BD3",
+          contrastText: "#fafafa"
         }
       },
       typography: {
@@ -72,12 +102,29 @@ export const Tema = {
   dark: createTheme({
       palette: {
         mode: 'dark',
+        primary: {
+          main: "#444",
+          dark: "#222",
+          light: "#512321",
+          contrastText: "#fafafa"
+        },
         secondary: {
           main: '#E06D06',
         },
         background: {
           default: '#222'
         },
+        sidebar: {
+          main: "#689187"
+        },
+        table: {
+          main: "#EFEFF1"
+        },
+        buttons: {
+          main: "#7E4E8E",
+          dark: "#C08BD3",
+          light: "#C08BD3"
+        }
       },
       typography: {
         fontFamily: [

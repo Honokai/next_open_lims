@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import { styled as StyledMUI } from "@mui/material";
+import { Box } from "@mui/system";
 
 export const DivContentTable = styled.div`
   flex: 2 2 0px;
@@ -18,23 +20,27 @@ export const DivLikeTable = styled.div`
   min-width: 400px;
   display: flex;
   margin: 0 1rem;
-  padding: .5rem 1rem;
+  // padding: .5rem 1rem;
   border-radius: .2rem;
   border: 1px solid gray;
   flex-direction: column;
   overflow: hidden;
 `
 
-export const DivLikeThead = styled.div`
-  padding: .3rem 0;
-  display: flex;
-  flex: 1;
-  text-align: center;
-  border-bottom: 2px solid gray;
-  & * {
-    flex: 1;
+export const DivLikeThead = StyledMUI(Box)(({theme}) => ({
+  padding: ".3rem 0",
+  display: "flex",
+  backgroundColor: theme.palette.table.main,
+  flex: "1",
+  textAlign: "center",
+  alignItems: "center",
+  borderBottom: "2px solid gray",
+  "& *": {
+    flex: "1",
   }
-`
+  })
+)
+
 
 export const DivLikeTbody = styled.div`
   margin: .3rem 0;
