@@ -35,11 +35,11 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
           <ChevronLeft/>
         </IconButton>
       </div>
-      <List>
+      <List sx={{color: "sidebar.contrastText"}}>
         <ListItem disableGutters>
           <ListItemButton id="samples" onClick={(e) => handleSection(e.currentTarget.id)}>
             <ListItemIcon>
-              <ScienceOutlined/>
+              <ScienceOutlined sx={{color: "sidebar.contrastText"}}/>
             </ListItemIcon>
             <ListItemText>
               Samples
@@ -51,31 +51,31 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <NewReleasesOutlined />
+                <NewReleasesOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="Created" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <ScienceOutlined />
+                <ScienceOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="All" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <LocalShippingOutlined />
+                <LocalShippingOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="In Transit" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <QueryStats />
+                <QueryStats sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="In Analysis" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <DeleteOutline />
+                <DeleteOutline sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="Discarted" />
             </ListItemButton>
@@ -84,7 +84,7 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
         <ListItem disableGutters>
           <ListItemButton id="subSamples" onClick={(e) => handleSection(e.currentTarget.id)}>
             <ListItemIcon>
-              <FolderCopyRounded/>
+              <FolderCopyRounded sx={{color: "sidebar.contrastText"}}/>
             </ListItemIcon>
             <ListItemText>
               SubSamples
@@ -96,31 +96,31 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <NewReleasesOutlined />
+                <NewReleasesOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="Created" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <ScienceOutlined />
+                <ScienceOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="All" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <LocalShippingOutlined />
+                <LocalShippingOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="In Transit" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <QueryStats />
+                <QueryStats sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="In Analysis" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <DeleteOutline />
+                <DeleteOutline sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>
               <ListItemText primary="Discarted" />
             </ListItemButton>

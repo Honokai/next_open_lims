@@ -7,13 +7,13 @@ declare module '@mui/material/styles' {
   interface Palette {
     sidebar: PaletteColor;
     table: PaletteColor;
-    buttons: PaletteColor;
+    generalButton: PaletteColor;
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
     sidebar: PaletteColorOptions;
     table: PaletteColorOptions;
-    buttons: PaletteColorOptions;
+    generalButton: PaletteColorOptions;
   }
 }
 
@@ -35,7 +35,6 @@ export const ThemeContextProvider = ({children}: ProviderProps) => {
   React.useEffect(() => {
     if(typeof window !== 'undefined')
       localStorage.setItem("preferredTheme", theme)
-    
   }, [theme])
   
 
@@ -66,18 +65,20 @@ export const Tema = {
           contrastText: "#010101"
         },
         text: {
-          primary: '#131313;',
+          primary: '#000',
         },
         secondary: {
           main: '#135FD4',
+          contrastText: '#000'
         },
         sidebar: {
-          main: "#9CDECE"
+          main: "#A29CDE",
+          contrastText: "#fff"
         },
         table: {
           main: "#EFEFF1"
         },
-        buttons: {
+        generalButton: {
           main: "#7E4E8E",
           dark: "#59266C",
           light: "#C08BD3",
@@ -120,7 +121,7 @@ export const Tema = {
         table: {
           main: "#EFEFF1"
         },
-        buttons: {
+        generalButton: {
           main: "#7E4E8E",
           dark: "#C08BD3",
           light: "#C08BD3"
