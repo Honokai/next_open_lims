@@ -16,10 +16,10 @@ interface SampleCreateProps {
   index: number
   removeItemHandler: (index: number) => void
   updateItemHandler: (col: GenericObjectKeyType, key: number) => void
-  handleTest: (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, keyzndex: number) => void
+  onContextMenu: (event: React.MouseEvent, key: number) => void
 }
 
-const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: SampleCreateProps) => {
+const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onContextMenu}: SampleCreateProps) => {
   const [timer, setTimer] = React.useState(0)
   const [ value, setValue ] = React.useState<GenericObjectKeyType>(item)
 
@@ -28,7 +28,8 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: Sampl
   }, [value])
 
   React.useEffect(() => {
-    setValue(item)
+    if (item !== value)
+      setValue(item)
   }, [item])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
@@ -53,16 +54,18 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: Sampl
     
     let t = setTimeout(() => {
       updateItemHandler(value, index)
-    }, 600, value, index)
+    }, 800, value, index)
 
     setTimer(t)
   }
 
   return (
     <DivLikeRow style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
-      #{index+1}
+      <div style={{width: "30px"}}>
+        #{index+1}
+      </div>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="client_document" onChange={(e) => handleChange(e)} value={value.client_document ? value.client_document : ""} size="small" variant="standard" placeholder="Client document" onContextMenu={(e) => {e.preventDefault(); alert("toma esse alerta")}}/>
+        <TextField color="sidebar" name="client_document" onChange={(e) => handleChange(e)} value={value.client_document ? value.client_document : ""} size="small" variant="standard" placeholder="Client document" onContextMenu={(e) => {onContextMenu(e, index)}}/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
         <TextField color="sidebar" name="client_name" onChange={(e) => handleChange(e)} value={value.client_name ? value.client_name : ""} size="small" variant="standard" placeholder="Client name"/>
@@ -83,7 +86,7 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: Sampl
         <TextField color="sidebar" name="vol_mass" onChange={(e) => handleChange(e)} value={value.vol_mass ? value.vol_mass : ""} size="small" variant="standard" placeholder="Volume/Mass"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="unit" onChange={(e) => handleChange(e)} value={value.unit ? value.unit : ""} size="small" variant="standard" placeholder="Unit"/>
+        <TextField onContextMenu={(e) => onContextMenu(e, index)} color="sidebar" name="unit" onChange={(e) => handleChange(e)} value={value.unit ? value.unit : ""} size="small" variant="standard" placeholder="Unit"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
         <FormControl size="small" fullWidth>

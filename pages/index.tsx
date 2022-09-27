@@ -1,6 +1,6 @@
 import React, { ReactEventHandler } from "react"
 import { Container } from "@mui/system"
-import { Box, Button, Dialog, DialogTitle, FormControl, InputLabel, List, ListItem, MenuItem, Modal, Paper, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { Box, Button, ClickAwayListener, Dialog, DialogTitle, FormControl, InputLabel, List, ListItem, ListItemButton, MenuItem, Modal, Paper, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { useTable } from "../src/contexts/useTable"
 import Layout from "../src/Shared/Layout"
 import TableBody from "../src/Shared/Table/TableBody"
@@ -19,8 +19,19 @@ const Columns: DataFieldType[] = [
 
 const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { setLoading } = useTable()
-  const [data, setData] = React.useState(samples)
-  const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1, samples: [] as GenericObjectKeyType[]})
+  // const [data, setData] = React.useState(samples)
+  const [tableState, setTableState] = React.useState(
+    {
+      dialogOpen: false,
+      createSampleModalOpen: false,
+      sampleQuantity: 1,
+      samples: [] as GenericObjectKeyType[],
+      contextMenuOpen: false,
+      targetIndex: 0,
+      mouseCoordinates: {x: 0, y: 0}
+    }
+  )
+  const ref = React.useRef<Element>()
 
   // React.useEffect(() => {
   //   setTableState({...tableState, samples: Array(tableState.sampleQuantity).fill(0).map(x => {
@@ -28,9 +39,9 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
   //   })})
   // }, [tableState.sampleQuantity])
 
-  React.useEffect(() => {
-    console.log(tableState.samples)
-  }, [tableState.samples])
+  // React.useEffect(() => {
+  //   console.log(tableState.samples)
+  // }, [tableState.samples])
 
   function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
   {
@@ -38,7 +49,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
       setTableState({
         ...tableState,
         dialogOpen: !tableState.dialogOpen,
-        createSampleModalOpen: !tableState.createSampleModalOpen, 
+        createSampleModalOpen: !tableState.createSampleModalOpen,
         samples: Array(tableState.sampleQuantity).fill(0).map(x => {
           return {client_document: "", client_name: "", client_email: "", date_received: "", received_by: "", date_collected: "", vol_mass: "", unit: "", analysis: ""}
         })
@@ -58,18 +69,39 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
     setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
   }
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, index: number)
+  function handleContextMenu()
   {
-    // console.log(event.target.name)
+    setTableState({...tableState, contextMenuOpen: !tableState.contextMenuOpen})
+  }
+
+  function onContextMenu(event: React.MouseEvent, index: number)
+  {
+    event.preventDefault()
+    //@ts-ignore-next-line
+    ref.current = event.target
+    setTableState({
+      ...tableState,
+      contextMenuOpen: !tableState.contextMenuOpen,
+      targetIndex: index,
+      mouseCoordinates: {
+        x: event.pageX,
+        y: event.pageY
+      }
+    })
+  }
+
+  function fillDown()
+  {
     setTableState(
       {
         ...tableState,
-        samples: tableState.samples.map((objectVal, indexKey) => {
-          if (indexKey === index) {
-            objectVal[event.target.name] = event.target.value
+        samples: tableState.samples.map((x, key) => {
+          if (key > tableState.targetIndex) {
+            //@ts-ignore
+            x[ref.current.name] = ref.current.value
           }
 
-          return objectVal
+          return x
         })
       }
     )
@@ -99,11 +131,12 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
 
   return (
     <Layout>
+      <>
       <Container maxWidth="xl" sx={{height: "100%", padding: "1rem 0"}}>
         <div style={{margin: ".2rem 1rem"}}>
           <Button onClick={() => handleSampleQuantityDialog()} color="generalButton" variant="contained">Create sample</Button>
         </div>
-        <TableBody key={"table"} header={Columns} entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
+        <TableBody key={"table"} header={Columns} entity={new SampleColumns()} searchable sortable showCheckbox rowData={samples}/>
 
         <Dialog open={tableState.dialogOpen} transitionDuration={100}>
           <DialogTitle>How many samples?</DialogTitle>
@@ -135,6 +168,9 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
             <form>
               <div style={{display: "flex", flexDirection: "column"}}>
                 <div style={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
+                  <div style={{width: "30px"}}>
+                    #
+                  </div>
                   <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
                     Client document
                   </DivContentTable>
@@ -168,7 +204,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
                 <div style={{display: "flex", flexDirection: "column"}}>
                   {tableState.samples.map((item, index) => {
                     return (
-                      <SampleCreate key={`sample[${index}]`} handleTest={handleChange} updateItemHandler={updateItemSample} removeItemHandler={removeItem} item={item} index={index}/>
+                      <SampleCreate onContextMenu={onContextMenu} key={`sample[${index}]`} updateItemHandler={updateItemSample} removeItemHandler={removeItem} item={item} index={index}/>
                     )
                   })}
                 </div>
@@ -180,6 +216,19 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
           </Box>
         </Modal>
       </Container>
+      <div onMouseLeave={handleContextMenu}>
+        {/* <ClickAwayListener onClickAway={() => {
+          if(tableState.contextMenuOpen)
+            handleContextMenu()
+        }}> */}
+          <List sx={{backgroundColor: "sidebar.main", zIndex: "2000", position: "absolute", top: `${tableState.mouseCoordinates.y}px`, left: `${tableState.mouseCoordinates.x}px`, display: tableState.contextMenuOpen ? "block" : "none"}}>
+            <ListItemButton onClick={fillDown}>Fill down</ListItemButton>
+            <ListItemButton>Fill down</ListItemButton>
+            <ListItemButton>Fill down</ListItemButton>
+          </List>
+        {/* </ClickAwayListener> */}
+      </div>
+      </>
     </Layout>
   )
 }
