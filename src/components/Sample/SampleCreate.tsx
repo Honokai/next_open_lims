@@ -16,26 +16,20 @@ interface SampleCreateProps {
   index: number
   removeItemHandler: (index: number) => void
   updateItemHandler: (col: GenericObjectKeyType, key: number) => void
+  handleTest: (event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, keyzndex: number) => void
 }
 
 const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: SampleCreateProps) => {
-  const [ value, setValue ] = React.useState<GenericObjectKeyType>({
-    client_document: "",
-    client_name: "",
-    client_email: "",
-    date_received: "",
-    received_by: "",
-    date_collected: "",
-    vol_mass: "",
-    unit: "",
-    analysis: ""
-  })
   const [timer, setTimer] = React.useState(0)
+  const [ value, setValue ] = React.useState<GenericObjectKeyType>(item)
 
   React.useEffect(() => {
-    console.log("render")
     callUpdateAfterTimeout()
   }, [value])
+
+  React.useEffect(() => {
+    setValue(item)
+  }, [item])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
   {
@@ -45,7 +39,7 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: Sampl
     })
   }
 
-  function handleSelectChange(event: SelectChangeEvent<unknown>, child?: React.ReactNode)
+  function handleSelectChange(event: SelectChangeEvent, child?: React.ReactNode)
   {
     setValue({
       ...value,
@@ -56,10 +50,10 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler}: Sampl
   function callUpdateAfterTimeout()
   {
     clearTimeout(timer)
-
+    
     let t = setTimeout(() => {
       updateItemHandler(value, index)
-    }, 500, value, index)
+    }, 600, value, index)
 
     setTimer(t)
   }

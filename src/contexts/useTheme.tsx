@@ -17,6 +17,19 @@ declare module '@mui/material/styles' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    generalButton: true;
+  }
+}
+
+declare module '@mui/material/TextField' {
+  interface TextFieldProps {
+    sidebar: true;
+  }
+}
+
+
 interface ContextProps {
   theme: "light"|"dark"
   handleTheme: () => void

@@ -91,38 +91,6 @@ const TableBody = ({ rowData, sortable, theme, showCheckbox, entity, editable, s
           Exibindo {tableData.filteredList?.length}
         </h5>
       </DivLikeRow>
-      
-      {/* <Dialog open={tableState.dialogOpen} transitionDuration={100}>
-        <DialogTitle>How many samples?</DialogTitle>
-        <List>
-          <ListItem sx={{display: "flex", justifyContent: "center"}}>
-            <TextField 
-              sx={{width: "10rem"}}
-              size="small"
-              onChange={inputHandler}
-              value={tableState.sampleQuantity}
-              type={"number"} InputProps={{ inputProps: { min: 0, max: 10 } }}
-            />
-          </ListItem>
-          <ListItem sx={{display: "flex", justifyContent: "center"}}>
-            <Button variant="contained" onClick={() => handleSampleQuantityDialog(true)}>OK</Button>
-          </ListItem>
-        </List>
-      </Dialog>
-      <Modal
-        open={tableState.createSampleModalOpen}
-        onClose={handleModalSample}
-        sx={{display: "flex", justifyContent: "center", alignItems: "center"}}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box component={Paper} sx={{ width: 400 }}>
-          <h2 id="parent-modal-title">Text in a modal</h2>
-          <p id="parent-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </p>
-        </Box>
-      </Modal> */}
     </DivLikeTable>
   )
 }

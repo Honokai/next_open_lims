@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactEventHandler } from "react"
 import { Container } from "@mui/system"
 import { Box, Button, Dialog, DialogTitle, FormControl, InputLabel, List, ListItem, MenuItem, Modal, Paper, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { useTable } from "../src/contexts/useTable"
@@ -22,11 +22,11 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
   const [data, setData] = React.useState(samples)
   const [tableState, setTableState] = React.useState({dialogOpen: false, createSampleModalOpen: false, sampleQuantity: 1, samples: [] as GenericObjectKeyType[]})
 
-  React.useEffect(() => {
-    setTableState({...tableState, samples: Array(tableState.sampleQuantity).fill(0).map(x => {
-      return {client_document: "", client_name: "", client_email: "", date_received: "", received_by: "", date_collected: "", vol_mass: "", unit: "", analysis: ""}
-    })})
-  }, [tableState.sampleQuantity])
+  // React.useEffect(() => {
+  //   setTableState({...tableState, samples: Array(tableState.sampleQuantity).fill(0).map(x => {
+  //     return {client_document: "", client_name: "", client_email: "", date_received: "", received_by: "", date_collected: "", vol_mass: "", unit: "", analysis: ""}
+  //   })})
+  // }, [tableState.sampleQuantity])
 
   React.useEffect(() => {
     console.log(tableState.samples)
@@ -35,7 +35,14 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
   function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
   {
     if(shouldOpenSampleModal){
-      setTableState({...tableState, dialogOpen: !tableState.dialogOpen, createSampleModalOpen: !tableState.createSampleModalOpen})
+      setTableState({
+        ...tableState,
+        dialogOpen: !tableState.dialogOpen,
+        createSampleModalOpen: !tableState.createSampleModalOpen, 
+        samples: Array(tableState.sampleQuantity).fill(0).map(x => {
+          return {client_document: "", client_name: "", client_email: "", date_received: "", received_by: "", date_collected: "", vol_mass: "", unit: "", analysis: ""}
+        })
+      })
     } else {
       setTableState({...tableState, dialogOpen: !tableState.dialogOpen})
     }
@@ -51,18 +58,43 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
     setTableState({...tableState, sampleQuantity: Number(e.currentTarget.value)})
   }
 
+  function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>, index: number)
+  {
+    // console.log(event.target.name)
+    setTableState(
+      {
+        ...tableState,
+        samples: tableState.samples.map((objectVal, indexKey) => {
+          if (indexKey === index) {
+            objectVal[event.target.name] = event.target.value
+          }
+
+          return objectVal
+        })
+      }
+    )
+  }
+
   function updateItemSample(item: GenericObjectKeyType, index: number)
   {
-    // console.log(item, index)
-    let samplesArray = Array.from(tableState.samples)
-    samplesArray[index] = item
-
-    setTableState({...tableState, samples: samplesArray})
+    setTableState(
+      {
+        ...tableState,
+        samples: tableState.samples.map((objectVal, indexKey) => {
+          return indexKey === index ? item : objectVal
+        })
+      }
+    )
   }
 
   function removeItem(index: number)
   {
-    console.log(tableState.samples.find((el, i) => i === index))
+    setTableState({
+      ...tableState,
+      samples: tableState.samples.filter((item, keyIndex) => {
+        return index !== keyIndex
+      })
+    })
   }
 
   return (
@@ -71,7 +103,7 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
         <div style={{margin: ".2rem 1rem"}}>
           <Button onClick={() => handleSampleQuantityDialog()} color="generalButton" variant="contained">Create sample</Button>
         </div>
-        <TableBody header={Columns} entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
+        <TableBody key={"table"} header={Columns} entity={new SampleColumns()} searchable sortable showCheckbox rowData={data}/>
 
         <Dialog open={tableState.dialogOpen} transitionDuration={100}>
           <DialogTitle>How many samples?</DialogTitle>
@@ -99,50 +131,52 @@ const Home = ({samples}: InferGetServerSidePropsType<typeof getServerSideProps>)
           aria-labelledby="parent-modal-title"
           aria-describedby="parent-modal-description"
         >
-          <Box component={Paper} sx={{ minWidth: "300px", maxWidth: "95%", height: "auto", padding: 1 }}>
-            <div style={{display: "flex", flexDirection: "column"}}>
-              <div style={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Client document
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Client name
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Client e-mail
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Date received
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Received by
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Date collected
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Vol/Mass
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Un
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                  Analysis
-                </DivContentTable>
-                <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
-                </DivContentTable>
-              </div>
+          <Box component={Paper} sx={{ minWidth: "300px", maxWidth: "95%", height: "auto", maxHeight: "95%", padding: 1, overflow: "auto" }}>
+            <form>
               <div style={{display: "flex", flexDirection: "column"}}>
-                {tableState.samples.map((item, index) => {
-                  return (
-                    <SampleCreate updateItemHandler={updateItemSample} removeItemHandler={removeItem} item={item} index={index}/>
-                  )
-                })}
+                <div style={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Client document
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Client name
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Client e-mail
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Date received
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Received by
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Date collected
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Vol/Mass
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Un
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                    Analysis
+                  </DivContentTable>
+                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-word"}}>
+                  </DivContentTable>
+                </div>
+                <div style={{display: "flex", flexDirection: "column"}}>
+                  {tableState.samples.map((item, index) => {
+                    return (
+                      <SampleCreate key={`sample[${index}]`} handleTest={handleChange} updateItemHandler={updateItemSample} removeItemHandler={removeItem} item={item} index={index}/>
+                    )
+                  })}
+                </div>
+                <div>
+                  <Button variant="contained">Save</Button>
+                </div>
               </div>
-              <div>
-                <Button variant="contained">Save</Button>
-              </div>
-            </div>
+            </form>
           </Box>
         </Modal>
       </Container>

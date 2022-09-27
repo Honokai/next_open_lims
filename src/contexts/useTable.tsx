@@ -136,7 +136,7 @@ export const TableContextProvider = ({ children }: ProviderProps) => {
 
   function loadTableData(d: Array<Object>)
   {
-    setTableData({...tableData, filteredList: d.slice(0, 50), list: d})
+    setTableData({...tableData, filteredList: d, list: d})
   }
 
   function editableHandler(idItem: number, column: string, value: string, createNew?: boolean)

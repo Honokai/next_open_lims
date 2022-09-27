@@ -16,7 +16,7 @@ export const Index = () => {
   return (
     <Layout>
       <Container /*maxWidth="xl"*/ sx={{height: "100%", padding: "3rem 0"}}>
-        <TableBody entity={new SetorColumn()} rowData={data} sortable={true} editable/>
+        {/* <TableBody entity={new SetorColumn()} rowData={data} sortable={true} editable/> */}
       </Container>
     </Layout>
   )
