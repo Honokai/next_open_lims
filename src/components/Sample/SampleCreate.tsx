@@ -1,4 +1,5 @@
 import React from "react";
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { DivContentTable, DivLikeRow } from "../../Helpers/StyledTags";
 import { GenericObjectKeyType } from "../../Helpers/TypeHelpers";
@@ -20,11 +21,16 @@ interface SampleCreateProps {
 }
 
 const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onContextMenu}: SampleCreateProps) => {
-  const [timer, setTimer] = React.useState(0)
+  // const [timer, setTimer] = React.useState(0)
+  const { register } = useForm();
+  const { update } = useFieldArray({
+    name: 'sample',
+    control
+  });
   const [ value, setValue ] = React.useState<GenericObjectKeyType>(item)
 
   React.useEffect(() => {
-    callUpdateAfterTimeout()
+    // callUpdateAfterTimeout()
   }, [value])
 
   React.useEffect(() => {
@@ -65,33 +71,34 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
         #{index+1}
       </div>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="client_document" onChange={(e) => handleChange(e)} value={value.client_document ? value.client_document : ""} size="small" variant="standard" placeholder="Client document" onContextMenu={(e) => {onContextMenu(e, index)}}/>
+        {/* <input {...register(`sample.${index}.client_document`, { required: true })} size="small" variant="standard" placeholder="Client document" onContextMenu={(e) => {onContextMenu(e, index)}} placeholder="Client document" onContextMenu={(e) => {onContextMenu(e, index)}}/> */}
+        <TextField color="sidebar" {...register(`sample.${index}.client_document` as const, { required: true })} name={`sample.${index}.client_document`} size="small" variant="standard" placeholder="Client document" onContextMenu={(e) => {onContextMenu(e, index)}}/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="client_name" onChange={(e) => handleChange(e)} value={value.client_name ? value.client_name : ""} size="small" variant="standard" placeholder="Client name"/>
+        <TextField color="sidebar" {...register(`sample.${index}.client_name` as const, { required: true })} size="small" variant="standard" placeholder="Client name"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="client_email" onChange={(e) => handleChange(e)} value={value.client_email ? value.client_email : ""} size="small" variant="standard" placeholder="Client email"/>
+        <TextField color="sidebar" {...register(`sample.${index}.client_email` as const, { required: true })} size="small" variant="standard" placeholder="Client email"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="date_received" onChange={(e) => handleChange(e)} value={value.date_received ? value.date_received : ""} type="date" size="small" variant="standard" placeholder="Date received"/>
+        <TextField color="sidebar" {...register(`sample.${index}.date_received` as const, { required: true })}  type="date" size="small" variant="standard" placeholder="Date received"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="received_by" onChange={(e) => handleChange(e)} value={value.received_by ? value.received_by : ""} size="small" variant="standard" placeholder="Received by"/>
+        <TextField color="sidebar" {...register(`sample.${index}.received_by` as const, { required: true })}  size="small" variant="standard" placeholder="Received by"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="date_collected" onChange={(e) => handleChange(e)} type="date" value={value.date_collected ? value.date_collected : ""} size="small" variant="standard" placeholder="Date collected"/>
+        <TextField color="sidebar" {...register(`sample.${index}.date_collected` as const, { required: true })}  size="small" variant="standard" placeholder="Date collected"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField color="sidebar" name="vol_mass" onChange={(e) => handleChange(e)} value={value.vol_mass ? value.vol_mass : ""} size="small" variant="standard" placeholder="Volume/Mass"/>
+        <TextField color="sidebar" {...register(`sample.${index}.vol_mass` as const, { required: true })} size="small" variant="standard" placeholder="Volume/Mass"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
-        <TextField onContextMenu={(e) => onContextMenu(e, index)} color="sidebar" name="unit" onChange={(e) => handleChange(e)} value={value.unit ? value.unit : ""} size="small" variant="standard" placeholder="Unit"/>
+        <TextField onContextMenu={(e) => onContextMenu(e, index)} color="sidebar" name="unit"  size="small" variant="standard" placeholder="Unit"/>
       </DivContentTable>
       <DivContentTable style={{margin: "0 .8rem", wordBreak: "break-word"}}>
         <FormControl size="small" fullWidth>
           <InputLabel color="text" id="demo-simple-select-label">Analysis</InputLabel>
-          <Select color="secondary" name="analysis" onChange={(e) => handleSelectChange(e)} size="small" value={value.analysis ? value.analysis : ""}>
+          <Select color="secondary" {...register(`sample.${index}.analysis` as const, { required: true })} name={`sample[${index}]analysis`}>
             <MenuItem value={10}>Ten</MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
