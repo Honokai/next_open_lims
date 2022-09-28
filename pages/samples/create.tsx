@@ -1,5 +1,5 @@
-import React from 'react';
-import { useForm, SubmitHandler, useFieldArray, useWatch } from "react-hook-form";
+import React, { memo } from 'react';
+import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Autocomplete, Box, Button, Dialog, DialogTitle, FormControl, InputLabel, List, ListItem, ListItemButton, MenuItem, Paper, Select, TextField } from "@mui/material";
 import Layout from "../../src/Shared/Layout"
 import { DivContentTable, DivLikeRow } from '../../src/Helpers/StyledTags';
@@ -7,6 +7,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { GenericObjectKeyType } from '../../src/Helpers/TypeHelpers';
 // import { useAutoCompleteProps } from '@mui/material/Autocomplete'; 
 import { pluck } from '../../src/Helpers/Functions';
+import SampleCreate from '../../src/components/Sample/SampleCreate';
 
 type SampleForm = {
   sample: {
@@ -44,6 +45,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
       dialogOpen: true,
       createSampleModalOpen: false,
       sampleQuantity: 0,
+      limiter: [],
       samples: [] as GenericObjectKeyType[],
       contextMenuOpen: false,
       targetIndex: 0,
@@ -51,7 +53,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     }
   )
 
-  const { register, handleSubmit, control, watch } = useForm<SampleForm>({
+  const { register, handleSubmit, control } = useForm<SampleForm>({
     defaultValues: {
       sample: Array(createState.sampleQuantity && 0).fill(0).map(x => {
         return {
@@ -97,13 +99,24 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
 
   React.useEffect(() => {
     remove()
-    append(Array(createState.sampleQuantity).fill(0).map(x => {
-      return {
-        external_id: "", sample_type: "", analysis: "",
-        customer_id: "", received: "", received_by: "",
-        storage_id: "", collected: "", collected_by: "",
-        vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
-    }))
+    // append(Array(createState.sampleQuantity).fill(0).map(x => {
+    //   return {
+    //     external_id: "", sample_type: "", analysis: "",
+    //     customer_id: "", received: "", received_by: "",
+    //     storage_id: "", collected: "", collected_by: "",
+    //     vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
+    // }))
+    setCreateState({
+      ...createState,
+      samples: Array(createState.sampleQuantity).fill(0).map(x => {
+        return {
+          external_id: "", sample_type: "", analysis: "",
+          customer_id: "", received: "", received_by: "",
+          storage_id: "", collected: "", collected_by: "",
+          vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""
+        }
+      })
+    })
   }, [createState.dialogOpen])
 
   function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
@@ -168,6 +181,26 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     )
   }
 
+  function removeItem(index: number): void
+  {
+    setCreateState({
+      ...createState,
+      samples: createState.samples.filter((x, key) => index !== key)
+    })
+  }
+
+  function updateItem(col: GenericObjectKeyType, key: number)
+  {
+    setCreateState({
+      ...createState,
+      samples: createState.samples.map((x, index) => {
+        if(index === key)
+          x = col
+        
+          return x
+      })
+    })
+  }
   return(
     <Layout>
       <>
@@ -192,8 +225,8 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
             </ListItem>
           </List>
         </Dialog>
-        <div style={{display: "flex", padding: "0 .6rem", alignItems: "center", justifyContent: "center", minWidth: "100%", height: "100%", overflow: "auto" }}>
-            <form style={{width: "100%"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
+        <div style={{display: "flex", padding: "0 .6rem", alignItems: "center", justifyContent: "center", minWidth: "100%", maxHeight: "100%", overflow: "auto" }}>
+            <form style={{width: "100%", maxHeight: "95%"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
               <div style={{display: "flex", flexDirection: "column"}}>
                 <Box component={Paper} sx={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
                   <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
@@ -237,7 +270,10 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                   </DivContentTable>
                 </Box>
                 <div style={{display: "flex", flexDirection: "column"}}>
-                  {fields.map((item, index) => {
+                  {createState.samples.map((item, key) => {
+                    return <SampleCreate item={item} index={key} removeItemHandler={removeItem} updateItemHandler={updateItem} onContextMenu={onContextMenu} analyses={analyses}/>
+                  })}
+                  {/* {fields.map((item, index) => {
                     return (
                       <DivLikeRow key={item.id} style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
                         <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
@@ -319,8 +355,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                           </FormControl>
                         </DivContentTable>
                         <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <input style={{border: "none", padding: ".3rem", borderBottom: "1px solid black"}} {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Date received" />
-                          {/* <TextField color="sidebar" {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Date received"/> */}
+                          <TextField color="sidebar" {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Date received"/>
                         </DivContentTable>
                         <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
                           <FormControl size="small" fullWidth>
@@ -357,7 +392,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                         </DivContentTable>
                       </DivLikeRow>
                     )
-                  })}
+                  })} */}
                 </div>
                 <div>
                   <Button type="submit" variant="contained">Save</Button>
