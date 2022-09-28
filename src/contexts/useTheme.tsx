@@ -99,6 +99,7 @@ export const Tema = {
         }
       },
       typography: {
+        fontSize: 12,
         fontFamily: [
           '-apple-system',
           'BlinkMacSystemFont',
