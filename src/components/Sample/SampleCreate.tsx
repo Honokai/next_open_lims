@@ -1,10 +1,8 @@
 import React, { memo } from "react";
-import { useForm, SubmitHandler, useFieldArray, UseFormRegister, FieldArrayWithId } from "react-hook-form";
-import { Autocomplete, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
+import { UseFormRegister, FieldArrayWithId } from "react-hook-form";
+import { Autocomplete, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { DivContentTable, DivLikeRow } from "../../Helpers/StyledTags";
 import { GenericObjectKeyType } from "../../Helpers/TypeHelpers";
-import { DeleteOutline } from "@mui/icons-material";
-import { GetServerSideProps } from "next";
 import { SampleForm } from "../../../pages/samples/create";
 
 interface Inputs {
@@ -51,13 +49,13 @@ const SampleCreate = ({index, item, removeItemHandler, onContextMenu, analyses, 
     })
   }
 
-  function handleAutoCompleteChange(event: EventTarget, inputName: string, option: {label: string, value: string})
+  function handleAutoCompleteChange(event: EventTarget, inputName: string, option: {label: string, value: string}|null)
   {
     //@ts-ignore
     // updateItemHandler(index, `sample.${index}.${inputName}`, option.value)
     setValue({
       ...value,
-      [inputName]: option.value
+      [inputName]: option.value ?? ""
     })
   }
 
@@ -74,26 +72,15 @@ const SampleCreate = ({index, item, removeItemHandler, onContextMenu, analyses, 
   return (
     <DivLikeRow key={item.id} style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
       <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-        <TextField /*onChange={handleChange}*/ {...formRegister(`sample.${index}.external_id` as const)} color="sidebar" /*name={"external_id"}*/ size="small" variant="standard" placeholder="External ID" onContextMenu={(e) => {onContextMenu(e, index)}}/>
+        <TextField {...formRegister(`sample.${index}.external_id` as const)} color="sidebar" /*name={"external_id"}*/ size="small" variant="standard" placeholder="External ID" onContextMenu={(e) => {onContextMenu(e, index)}}/>
       </DivContentTable>
       <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-        {/* <Select color="secondary" {...formRegister(`sample.${index}.sample_type` as const)} defaultValue="" onChange={handleSelectChange} name="sample_type">
-            <MenuItem value="" disabled>Select</MenuItem>
-            <MenuItem value="urine">Urine</MenuItem>
-            <MenuItem value="blood">Blood</MenuItem>
-            <MenuItem value="plasma">Plasma</MenuItem>
-          </Select> */}
           <Autocomplete
             disablePortal
             size='small'
             options={sample_types}
-            // getOptionLabel={(option) => option['label']}
             onChange={(e, option) => handleAutoCompleteChange(e.target, "sample_type", option)} 
             fullWidth
-            // renderOption={(option, state) => {
-            //   console.log(state)
-            //   return  <>{option.value}</>
-            // }}
             renderInput={(params) => <TextField {...params} {...formRegister(`sample.${index}.sample_type` as const)} label="" />}
             noOptionsText="Criteria did not return results"
           />

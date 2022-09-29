@@ -270,7 +270,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                     Discarded by
                   </DivContentTable>
                 </Box>
-                <div style={{display: "flex", minHeight: "300px", flex: "12", flexDirection: "column", overflow: "auto"}}>
+                <div style={{display: "flex", minHeight: "fit-content", flex: "12", flexDirection: "column", overflow: "auto"}}>
                   {fields.map((item, key) => {
                     return <SampleCreate formFields={fields} formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} onContextMenu={onContextMenu} analyses={analyses}/>
                   })}
