@@ -65,7 +65,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     }, mode: "onBlur"
   });
 
-  const { fields, remove, append } = useFieldArray({
+  const { fields, remove, append, update } = useFieldArray({
     name: 'sample',
     control
   });
@@ -201,6 +201,7 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
       })
     })
   }
+
   return(
     <Layout>
       <>
@@ -225,9 +226,9 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
             </ListItem>
           </List>
         </Dialog>
-        <div style={{display: "flex", padding: "0 .6rem", alignItems: "center", justifyContent: "center", minWidth: "100%", maxHeight: "100%", overflow: "auto" }}>
-            <form style={{width: "100%", maxHeight: "95%"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
-              <div style={{display: "flex", flexDirection: "column"}}>
+        <div style={{padding: "0 .6rem", alignItems: "center", justifyContent: "center", minWidth: "100%", maxHeight: "90%", overflow: "hidden" }}>
+            <form style={{flex: "1", maxHeight: "100%"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
+              <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
                 <Box component={Paper} sx={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
                   <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
                     External ID*
@@ -269,9 +270,9 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                     Discarded by
                   </DivContentTable>
                 </Box>
-                <div style={{display: "flex", flexDirection: "column"}}>
+                <div style={{display: "flex", minHeight: "300px", flex: "12", flexDirection: "column", overflow: "auto"}}>
                   {fields.map((item, key) => {
-                    return <SampleCreate formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} updateItemHandler={updateItem} onContextMenu={onContextMenu} analyses={analyses}/>
+                    return <SampleCreate formFields={fields} formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} onContextMenu={onContextMenu} analyses={analyses}/>
                   })}
                   {/* {fields.map((item, index) => {
                     return (

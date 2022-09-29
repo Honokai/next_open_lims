@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { useForm, SubmitHandler, useFieldArray, UseFormRegister } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray, UseFormRegister, FieldArrayWithId } from "react-hook-form";
 import { Autocomplete, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { DivContentTable, DivLikeRow } from "../../Helpers/StyledTags";
 import { GenericObjectKeyType } from "../../Helpers/TypeHelpers";
@@ -17,33 +17,22 @@ interface Inputs {
 interface SampleCreateProps {
   item: GenericObjectKeyType
   index: number
+  formFields: FieldArrayWithId<SampleForm, "sample", "id">[]
   removeItemHandler: (index: number) => void
-  updateItemHandler: (col: GenericObjectKeyType, key: number) => void
+  // updateItemHandler: (keyIndex: number, fieldName: string, value: string) => void
   onContextMenu: (event: React.MouseEvent, key: number) => void
   analyses: GenericObjectKeyType[]
   formRegister: UseFormRegister<SampleForm>
 }
 
-const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onContextMenu, analyses, formRegister}: SampleCreateProps) => {
+const SampleCreate = ({index, item, removeItemHandler, onContextMenu, analyses, formRegister}: SampleCreateProps) => {
   // const [timer, setTimer] = React.useState(0)
   const sample_types = [
-    {label: "Urine", id: "urine"},
-    {label: "Blood", id: "blood"}
+    {label: "Urine", value: "urine"},
+    {label: "Blood", value: "blood"}
   ]
 
   const [ value, setValue ] = React.useState<GenericObjectKeyType>(item)
-
-  React.useEffect(() => {
-    // setTimer(0)
-    // clearTimeout(timer)
-    
-    // callUpdateAfterTimeout()
-  }, [value])
-
-  React.useEffect(() => {
-    if(item !== value)
-      setValue(item)
-  }, [item])
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
   {
@@ -62,24 +51,25 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
     })
   }
 
-  function handleAutoCompleteChange(event: React.SyntheticEvent<EventTarget>, inputName: string)
+  function handleAutoCompleteChange(event: EventTarget, inputName: string, option: {label: string, value: string})
   {
-    
+    //@ts-ignore
+    // updateItemHandler(index, `sample.${index}.${inputName}`, option.value)
     setValue({
       ...value,
-      [inputName]: event?.textContent ?? ""
+      [inputName]: option.value
     })
   }
 
-  function callUpdateAfterTimeout()
-  {
-    let t = setTimeout(() => {
-      updateItemHandler(value, index)
-      // setToUpdate(false)
-    }, 1200, value, index)
+  // function callUpdateAfterTimeout()
+  // {
+  //   let t = setTimeout(() => {
+  //     updateItemHandler(value, index)
+  //     // setToUpdate(false)
+  //   }, 1200, value, index)
 
-    // setTimer(t)
-  }
+  //   // setTimer(t)
+  // }
 
   return (
     <DivLikeRow key={item.id} style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
@@ -97,9 +87,13 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
             disablePortal
             size='small'
             options={sample_types}
-            getOptionLabel={(option) => option['label']}
-            onChange={(e) => handleAutoCompleteChange(e.target, "sample_type")} 
+            // getOptionLabel={(option) => option['label']}
+            onChange={(e, option) => handleAutoCompleteChange(e.target, "sample_type", option)} 
             fullWidth
+            // renderOption={(option, state) => {
+            //   console.log(state)
+            //   return  <>{option.value}</>
+            // }}
             renderInput={(params) => <TextField {...params} {...formRegister(`sample.${index}.sample_type` as const)} label="" />}
             noOptionsText="Criteria did not return results"
           />
@@ -113,7 +107,7 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
             // getOptionLabel={(option) => option['label']}
             groupBy={(option: GenericObjectKeyType) => option['sample_type']}
             fullWidth
-            renderInput={(params) => <TextField {...params} label="" />}
+            renderInput={(params) => <TextField {...params} {...formRegister(`sample.${index}.analysis` as const)} label="" />}
             noOptionsText="Criteria did not return results"
           />
       </DivContentTable>
@@ -203,11 +197,11 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
           </Select>
         </FormControl>
       </DivContentTable>
-      <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
+      {/* <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
         <IconButton onClick={() => removeItemHandler(index)}>
           <DeleteOutline/>
         </IconButton>
-      </DivContentTable>
+      </DivContentTable> */}
     </DivLikeRow>
   )
 }
