@@ -1,10 +1,11 @@
 import React, { memo } from "react";
-import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, SubmitHandler, useFieldArray, UseFormRegister } from "react-hook-form";
 import { Autocomplete, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import { DivContentTable, DivLikeRow } from "../../Helpers/StyledTags";
 import { GenericObjectKeyType } from "../../Helpers/TypeHelpers";
 import { DeleteOutline } from "@mui/icons-material";
 import { GetServerSideProps } from "next";
+import { SampleForm } from "../../../pages/samples/create";
 
 interface Inputs {
   externalID: string
@@ -20,11 +21,11 @@ interface SampleCreateProps {
   updateItemHandler: (col: GenericObjectKeyType, key: number) => void
   onContextMenu: (event: React.MouseEvent, key: number) => void
   analyses: GenericObjectKeyType[]
+  formRegister: UseFormRegister<SampleForm>
 }
 
-const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onContextMenu, analyses}: SampleCreateProps) => {
-  const [timer, setTimer] = React.useState(0)
-  const [toUpdate, setToUpdate] = React.useState(false)
+const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onContextMenu, analyses, formRegister}: SampleCreateProps) => {
+  // const [timer, setTimer] = React.useState(0)
   const sample_types = [
     {label: "Urine", id: "urine"},
     {label: "Blood", id: "blood"}
@@ -33,10 +34,10 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
   const [ value, setValue ] = React.useState<GenericObjectKeyType>(item)
 
   React.useEffect(() => {
-    setTimer(0)
-    clearTimeout(timer)
-    setToUpdate(true)
-    callUpdateAfterTimeout()
+    // setTimer(0)
+    // clearTimeout(timer)
+    
+    // callUpdateAfterTimeout()
   }, [value])
 
   React.useEffect(() => {
@@ -46,6 +47,7 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>)
   {
+    console.log(event.currentTarget.value)
     setValue({
       ...value,
       [event.currentTarget.name]: event.currentTarget.value
@@ -60,30 +62,45 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
     })
   }
 
+  function handleAutoCompleteChange(event: React.SyntheticEvent<EventTarget>, inputName: string)
+  {
+    
+    setValue({
+      ...value,
+      [inputName]: event?.textContent ?? ""
+    })
+  }
+
   function callUpdateAfterTimeout()
   {
     let t = setTimeout(() => {
       updateItemHandler(value, index)
-      setToUpdate(false)
+      // setToUpdate(false)
     }, 1200, value, index)
 
-    setTimer(t)
+    // setTimer(t)
   }
 
   return (
-    <DivLikeRow key={item.id} style={{backgroundColor: (toUpdate ? "gray" : "inherit"), margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
+    <DivLikeRow key={item.id} style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
       <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-        <TextField value={value.external_id ? value.external_id : ""} onChange={handleChange} color="sidebar" name={"external_id"} size="small" variant="standard" placeholder="External ID" onContextMenu={(e) => {onContextMenu(e, index)}}/>
+        <TextField /*onChange={handleChange}*/ {...formRegister(`sample.${index}.external_id` as const)} color="sidebar" /*name={"external_id"}*/ size="small" variant="standard" placeholder="External ID" onContextMenu={(e) => {onContextMenu(e, index)}}/>
       </DivContentTable>
       <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
+        {/* <Select color="secondary" {...formRegister(`sample.${index}.sample_type` as const)} defaultValue="" onChange={handleSelectChange} name="sample_type">
+            <MenuItem value="" disabled>Select</MenuItem>
+            <MenuItem value="urine">Urine</MenuItem>
+            <MenuItem value="blood">Blood</MenuItem>
+            <MenuItem value="plasma">Plasma</MenuItem>
+          </Select> */}
           <Autocomplete
             disablePortal
             size='small'
-            id="combo-box-demo"
             options={sample_types}
             getOptionLabel={(option) => option['label']}
+            onChange={(e) => handleAutoCompleteChange(e.target, "sample_type")} 
             fullWidth
-            renderInput={(params) => <TextField {...params} value={value.sample_type ? value.sample_type : ""} label="" />}
+            renderInput={(params) => <TextField {...params} {...formRegister(`sample.${index}.sample_type` as const)} label="" />}
             noOptionsText="Criteria did not return results"
           />
       </DivContentTable>
@@ -91,11 +108,10 @@ const SampleCreate = ({index, item, removeItemHandler, updateItemHandler, onCont
         <Autocomplete
             disablePortal
             size='small'
-            id="combo-box-demo"
-            options={analyses.filter(x => x['sample_type'] == value.sample_type)}
+            options={value.sample_type != '' ? analyses.filter(x => x['sample_type'].toLowerCase() == value.sample_type.toLowerCase()) : analyses}
             // options={analyses.sort((a: GenericObjectKeyType, b: GenericObjectKeyType) => b['sample_type'].localeCompare(a['sample_type']))}
             // getOptionLabel={(option) => option['label']}
-            // groupBy={(option: GenericObjectKeyType) => option['sample_type']}
+            groupBy={(option: GenericObjectKeyType) => option['sample_type']}
             fullWidth
             renderInput={(params) => <TextField {...params} label="" />}
             noOptionsText="Criteria did not return results"

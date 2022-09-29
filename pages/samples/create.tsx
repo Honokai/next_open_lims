@@ -9,7 +9,7 @@ import { GenericObjectKeyType } from '../../src/Helpers/TypeHelpers';
 import { pluck } from '../../src/Helpers/Functions';
 import SampleCreate from '../../src/components/Sample/SampleCreate';
 
-type SampleForm = {
+export type SampleForm = {
   sample: {
     external_id: string,
     sample_type: string,
@@ -99,24 +99,24 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
 
   React.useEffect(() => {
     remove()
-    // append(Array(createState.sampleQuantity).fill(0).map(x => {
-    //   return {
-    //     external_id: "", sample_type: "", analysis: "",
-    //     customer_id: "", received: "", received_by: "",
-    //     storage_id: "", collected: "", collected_by: "",
-    //     vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
-    // }))
-    setCreateState({
-      ...createState,
-      samples: Array(createState.sampleQuantity).fill(0).map(x => {
-        return {
-          external_id: "", sample_type: "", analysis: "",
-          customer_id: "", received: "", received_by: "",
-          storage_id: "", collected: "", collected_by: "",
-          vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""
-        }
-      })
-    })
+    append(Array(createState.sampleQuantity).fill(0).map(x => {
+      return {
+        external_id: "", sample_type: "", analysis: "",
+        customer_id: "", received: "", received_by: "",
+        storage_id: "", collected: "", collected_by: "",
+        vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
+    }))
+    // setCreateState({
+    //   ...createState,
+    //   samples: Array(createState.sampleQuantity).fill(0).map(x => {
+    //     return {
+    //       external_id: "", sample_type: "", analysis: "",
+    //       customer_id: "", received: "", received_by: "",
+    //       storage_id: "", collected: "", collected_by: "",
+    //       vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""
+    //     }
+    //   })
+    // })
   }, [createState.dialogOpen])
 
   function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
@@ -270,8 +270,8 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
                   </DivContentTable>
                 </Box>
                 <div style={{display: "flex", flexDirection: "column"}}>
-                  {createState.samples.map((item, key) => {
-                    return <SampleCreate item={item} index={key} removeItemHandler={removeItem} updateItemHandler={updateItem} onContextMenu={onContextMenu} analyses={analyses}/>
+                  {fields.map((item, key) => {
+                    return <SampleCreate formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} updateItemHandler={updateItem} onContextMenu={onContextMenu} analyses={analyses}/>
                   })}
                   {/* {fields.map((item, index) => {
                     return (
