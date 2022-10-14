@@ -90,7 +90,7 @@ export const TableRow = ({showCheckbox, index, item, checked, editable, contentE
                 />
               </DivContentTable>
             )
-          } else if(typeof v[1] !== 'object') {
+          } else if(typeof v[1] !== 'object' || v[1] === null) {
             return (
               <DivContentTable onDoubleClick={(e) => onDoubleClick(v[0], e.currentTarget.innerHTML)} key={`rowContent[${index}][${i}]`} id={`${v[0]}[${item.id}][${i}]`}>
                 {v[1]}

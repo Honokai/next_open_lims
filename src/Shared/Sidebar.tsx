@@ -3,6 +3,7 @@ import { ChevronLeft, DeleteOutline, ExpandLess, ExpandMore, FolderCopyRounded, 
 import {Collapse, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import { GenericObjectKeyType } from "../Helpers/TypeHelpers";
 import { Box } from "@mui/system";
+import Link from "next/link";
 
 interface SidebarProps {
   handleDrawer: () => void
@@ -49,7 +50,7 @@ export const Sidebar = ({open, handleDrawer}: SidebarProps) => {
         </ListItem>
         <Collapse in={section.samples}>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItemButton LinkComponent={Link} href="/samples" sx={{ pl: 4 }}>
               <ListItemIcon>
                 <NewReleasesOutlined sx={{color: "sidebar.contrastText"}}/>
               </ListItemIcon>

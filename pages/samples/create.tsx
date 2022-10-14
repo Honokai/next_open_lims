@@ -1,29 +1,28 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
-import { Autocomplete, Box, Button, Dialog, DialogTitle, FormControl, InputLabel, List, ListItem, ListItemButton, MenuItem, Paper, Select, TextField } from "@mui/material";
+import { Alert, Button, Dialog, DialogTitle, List, ListItem, ListItemButton, Snackbar, TextField } from "@mui/material";
 import Layout from "../../src/Shared/Layout"
-import { DivContentTable, DivLikeRow } from '../../src/Helpers/StyledTags';
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { GenericObjectKeyType } from '../../src/Helpers/TypeHelpers';
-// import { useAutoCompleteProps } from '@mui/material/Autocomplete'; 
 import { pluck } from '../../src/Helpers/Functions';
-import SampleCreate from '../../src/components/Sample/SampleCreate';
+import SampleRowCreate from '../../src/components/Sample/SampleRowCreate';
+import axios from 'axios';
 
 export type SampleForm = {
-  sample: {
-    external_id: string,
+  samples: {
+    externalId: string,
     sample_type: string,
-    analysis: string,
+    tests: string,
     customer_id: string,
-    received: string,
-    received_by: string,
+    received_date: string,
+    received_by_id: string,
     storage_id: string,
-    collected: string,
-    collected_by: string,
-    vol_mass: string,
-    measurament_unit: string,
+    collected_date: string,
+    collected_by_id: string,
+    value_unit: string,
+    measurement_unit: string,
     discarded: string,
-    discarded_by: string,
+    discarded_by_id: string,
   }[]
 };
 
@@ -34,8 +33,8 @@ declare module "@mui/material/Autocomplete" {
   }
 }
 
-const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const ref = React.useRef<Element>()
+const Create = ({ analyses, users, storages }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const ref = React.useRef<EventTarget>()
   const sample_types = [
     {label: "Urine", id: "urine"},
     {label: "Blood", id: "blood"}
@@ -48,49 +47,76 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
       limiter: [],
       samples: [] as GenericObjectKeyType[],
       contextMenuOpen: false,
-      targetIndex: 0,
-      mouseCoordinates: {x: 0, y: 0}
+      target: {index: 0, field: ""},
+      mouseCoordinates: {x: 0, y: 0},
+      submit: {
+        isError: false,
+        openToast: false,
+        feedback: ''
+      }
     }
   )
 
-  const { register, handleSubmit, control } = useForm<SampleForm>({
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<SampleForm>({
     defaultValues: {
-      sample: Array(createState.sampleQuantity && 0).fill(0).map(x => {
+      samples: Array(createState.sampleQuantity && 0).fill(0).map(x => {
         return {
-          external_id: "", sample_type: "", analysis: "",
-          customer_id: "", received: "", received_by: "",
-          storage_id: "", collected: "", collected_by: "",
-          vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
+          externalId: "", sample_type: "", tests: "",
+          customer_id: "", received_date: "", received_by_id: "",
+          storage_id: "", collected_date: "", collected_by_id: "",
+          value_unit: "", measurement_unit: "", discarded: "", discarded_by_id: ""}
       })
     }, mode: "onBlur"
   });
 
   const { fields, remove, append, update } = useFieldArray({
-    name: 'sample',
+    name: 'samples',
     control
   });
 
   const onSubmit: SubmitHandler<SampleForm> = async (data, event) => {
     event?.preventDefault()
-    console.log(data)
+
     let form = new FormData()
-    data.sample.forEach((sample, key) => {
+
+    data.samples.forEach((sample, key) => {
       Object.entries(sample).forEach(el => {
-        form.append(`samples[${key}][${el[0]}]`, el[1])
+        if(el[0] === 'tests') {
+          if (el[1].length) {
+            String(el[1]).split(',').forEach((v, i) => {
+              form.append(`samples[${key}][${el[0]}][${i}][analysis_id]`, v)
+            })
+          } else {
+            form.delete('tests')
+          }
+        } else {
+          form.append(`samples[${key}][${el[0]}]`, el[1])
+        }
       })
     })
 
-    // form.append(JSON.stringify(data))
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_REACT_APP_URL_API}/v1/sample`, {
-      method: "POST",
-      body: form,
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_REACT_APP_TOKEN_API}`
+    await axios.post(`${process.env.NEXT_PUBLIC_REACT_APP_URL_API}/v1/sample`, form).then(r => {
+      if (r.status === 201) {
+        setCreateState({
+          ...createState,
+          submit: {
+            isError: false,
+            openToast: true,
+            feedback: "Creation executed successfully"
+          }
+        })
       }
-    }).then(r => {
-      console.log(r)
-    }).catch(e => console.log(e))
+    }).catch(e => {
+      setCreateState({
+        ...createState,
+        submit: {
+          isError: true,
+          openToast: true,
+          feedback: "Looks like we had an issue on our end!"
+        }
+      })
+    })
+
   };
 
   const onInvalid: SubmitHandler<SampleForm> = data => {
@@ -101,22 +127,11 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     remove()
     append(Array(createState.sampleQuantity).fill(0).map(x => {
       return {
-        external_id: "", sample_type: "", analysis: "",
-        customer_id: "", received: "", received_by: "",
-        storage_id: "", collected: "", collected_by: "",
-        vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""}
+        externalId: "", sample_type: "", tests: "",
+        customer_id: "", received_date: "", received_by_id: "",
+        storage_id: "", collected_date: "", collected_by_id: "",
+        value_unit: "", measurement_unit: "", discarded: "", discarded_by_id: ""}
     }))
-    // setCreateState({
-    //   ...createState,
-    //   samples: Array(createState.sampleQuantity).fill(0).map(x => {
-    //     return {
-    //       external_id: "", sample_type: "", analysis: "",
-    //       customer_id: "", received: "", received_by: "",
-    //       storage_id: "", collected: "", collected_by: "",
-    //       vol_mass: "", measurament_unit: "", discarded: "", discarded_by: ""
-    //     }
-    //   })
-    // })
   }, [createState.dialogOpen])
 
   function handleSampleQuantityDialog(shouldOpenSampleModal?: boolean)
@@ -126,7 +141,6 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
         ...createState,
         dialogOpen: !createState.dialogOpen,
         createSampleModalOpen: !createState.createSampleModalOpen,
-
       })
     } else {
       setCreateState({...createState, dialogOpen: !createState.dialogOpen})
@@ -148,15 +162,19 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     setCreateState({...createState, contextMenuOpen: !createState.contextMenuOpen})
   }
 
-  function onContextMenu(event: React.MouseEvent, index: number)
+  function onContextMenu(event: React.MouseEvent, keyIndex: number, fieldName: string)
   {
     event.preventDefault()
-    //@ts-ignore-next-line
+
     ref.current = event.target
+
     setCreateState({
       ...createState,
       contextMenuOpen: !createState.contextMenuOpen,
-      targetIndex: index,
+      target: {
+        index: keyIndex,
+        field: fieldName
+      },
       mouseCoordinates: {
         x: event.pageX,
         y: event.pageY
@@ -166,19 +184,17 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
 
   function fillDown()
   {
-    setCreateState(
-      {
-        ...createState,
-        samples: createState.samples.map((x, key) => {
-          if (key > createState.targetIndex) {
-            //@ts-ignore
-            x[ref.current.name] = ref.current.value
-          }
+    fields.forEach((item, index) => {
+      if (index >= createState.target.index)
+        if(ref.current)
+          //@ts-ignore
+          setValue(`samples.${index}.${createState.target.field}`, ref.current.value)
+    })
 
-          return x
-        })
-      }
-    )
+    setCreateState({
+      ...createState,
+      contextMenuOpen: !createState.contextMenuOpen,
+    })
   }
 
   function removeItem(index: number): void
@@ -189,16 +205,14 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
     })
   }
 
-  function updateItem(col: GenericObjectKeyType, key: number)
+  function handleClose()
   {
     setCreateState({
       ...createState,
-      samples: createState.samples.map((x, index) => {
-        if(index === key)
-          x = col
-        
-          return x
-      })
+      submit: {
+        ...createState.submit,
+        openToast: false
+      }
     })
   }
 
@@ -226,189 +240,50 @@ const Create = ({ analyses }: InferGetServerSidePropsType<typeof getServerSidePr
             </ListItem>
           </List>
         </Dialog>
-        <div style={{padding: "0 .6rem", alignItems: "center", justifyContent: "center", minWidth: "100%", maxHeight: "90%", overflow: "hidden" }}>
-            <form style={{flex: "1", maxHeight: "100%"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
-              <div style={{display: "flex", flexDirection: "column", height: '100%'}}>
-                <Box component={Paper} sx={{display: "flex", margin: ".5rem 0 .6rem 0"}}>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    External ID*
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Sample type
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Analysis
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Customer
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Received
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Received by
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Stored at
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Collected
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Collected by
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Vol/Mass
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Measurement unit
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Discarded
-                  </DivContentTable>
-                  <DivContentTable style={{fontWeight: "700", margin: "0 .1rem", wordBreak: "break-all"}}>
-                    Discarded by
-                  </DivContentTable>
-                </Box>
-                <div style={{display: "flex", minHeight: "fit-content", flex: "12", flexDirection: "column", overflow: "auto"}}>
-                  {fields.map((item, key) => {
-                    return <SampleCreate formFields={fields} formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} onContextMenu={onContextMenu} analyses={analyses}/>
-                  })}
-                  {/* {fields.map((item, index) => {
-                    return (
-                      <DivLikeRow key={item.id} style={{margin: ".5rem 0", justifyContent: "center", alignItems: "center"}}>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <TextField color="sidebar" {...register(`sample.${index}.external_id` as const)} name={`sample.${index}.external_id`} size="small" variant="standard" placeholder="External ID" onContextMenu={(e) => {onContextMenu(e, index)}}/>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                            <Autocomplete
-                              disablePortal
-                              size='small'
-                              id="combo-box-demo"
-                              options={sample_types}
-                              getOptionLabel={(option) => option['label']}
-                              fullWidth
-                              renderInput={(params) => <TextField {...register(`sample.${index}.sample_type` as const)} {...params} label="" />}
-                              noOptionsText="Criteria did not return results"
-                            />
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <Autocomplete
-                              disablePortal
-                              size='small'
-                              id="combo-box-demo"
-                              options={analyses.sort((a: GenericObjectKeyType, b: GenericObjectKeyType) => b['sample_type'].localeCompare(a['sample_type']))}
-                              getOptionLabel={(option) => option['label']}
-                              groupBy={(option: GenericObjectKeyType) => option['sample_type']}
-                              fullWidth
-                              renderInput={(params) => <TextField {...register(`sample.${index}.analysis` as const)} {...params} label="" />}
-                              noOptionsText="Criteria did not return results"
-                            />
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Customer</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.customer_id` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <TextField color="sidebar" {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Date received"/>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Received by</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.received_by` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Stored at</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.customer_id` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <TextField color="sidebar" {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Collected"/>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Collected by</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.customer_id` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <TextField color="sidebar" {...register(`sample.${index}.date_received` as const)}  type="date" size="small" variant="standard" placeholder="Date received"/>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Received by</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.customer_id` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small">
-                            <InputLabel color="text">Received by</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.received_by` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                        <DivContentTable style={{ justifyContent: "center", padding: ".6rem", wordBreak: "break-word"}}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel color="text">Received by</InputLabel>
-                            <Select color="secondary" {...register(`sample.${index}.customer_id` as const)} defaultValue="">
-                              <MenuItem value="" disabled>Select</MenuItem>
-                              <MenuItem value="urine">Urine</MenuItem>
-                              <MenuItem value="blood">Blood</MenuItem>
-                              <MenuItem value="plasma">Plasma</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </DivContentTable>
-                      </DivLikeRow>
-                    )
-                  })} */}
-                </div>
-                <div>
-                  <Button type="submit" variant="contained">Save</Button>
-                </div>
+        <div style={{padding: "0 .6rem", alignItems: "center", justifyContent: "center", width: "auto", maxHeight: "100%", overflow: "auto"}}>
+            <form style={{overflow: "auto"}} onSubmit={(e) => handleSubmit(onSubmit)(e)}>
+              <div style={{ overflow: "auto", height: '100%'}}>
+                <table style={{borderCollapse: "collapse", overflow: "auto", width: "100%", maxWidth: "auto"}}>
+                  <thead>
+                    <tr>
+                      <th style={{padding: ".6rem 0"}}>External ID*</th>
+                      <th style={{padding: ".6rem 0"}}>Sample type</th>
+                      <th style={{padding: ".6rem 0"}}>Analysis</th>
+                      <th style={{padding: ".6rem 0"}}>Customer</th>
+                      <th style={{padding: ".6rem 0"}}>Received</th>
+                      <th style={{padding: ".6rem 0"}}>Received by</th>
+                      <th style={{padding: ".6rem 0"}}>Stored at</th>
+                      <th style={{padding: ".6rem 0"}}>Collected</th>
+                      <th style={{padding: ".6rem 0"}}>Collected by</th>
+                      <th style={{padding: ".6rem 0"}}>Vol/Mass</th>
+                      <th style={{padding: ".6rem 0"}}>Measurement unit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fields.map((item, key) => {
+                      return <SampleRowCreate formErrors={errors} storages={storages} formController={control} formFields={fields} formRegister={register} item={item} key={`row[${key}]`} index={key} removeItemHandler={removeItem} onContextMenu={onContextMenu} analyses={analyses} users={users}/>
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{padding: ".6rem 0"}}>
+                <Button type="submit" variant="contained">Save</Button>
               </div>
             </form>
         </div>
         <div onMouseLeave={handleContextMenu}>
-          <List sx={{backgroundColor: "sidebar.main", zIndex: "2000", position: "absolute", top: `${createState.mouseCoordinates.y}px`, left: `${createState.mouseCoordinates.x}px`, display: createState.contextMenuOpen ? "block" : "none"}}>
+          <List disablePadding sx={{backgroundColor: "primary.main", borderRadius: ".2rem", zIndex: "2000", position: "absolute", top: `${createState.mouseCoordinates.y}px`, left: `${createState.mouseCoordinates.x}px`, display: createState.contextMenuOpen ? "block" : "none"}}>
             <ListItemButton onClick={fillDown}>Fill down</ListItemButton>
             <ListItemButton>Fill down</ListItemButton>
             <ListItemButton>Fill down</ListItemButton>
           </List>
         </div>
-        </>
+        <Snackbar open={createState.submit.openToast} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} variant="filled" severity={createState.submit.isError ? "error" : "success"} sx={{ width: '100%' }}>
+            {createState.submit.feedback}
+          </Alert>
+        </Snackbar>
+      </>
     </Layout>
   )
 }
@@ -420,18 +295,57 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
   })
 
+  const user = await fetch(`${process.env.REACT_APP_URL_API}/v1/user`, {
+    headers: {
+      Authorization: `Bearer ${process.env.REACT_APP_TOKEN_API}`
+    }
+  })
+
+  const storage = await fetch(`${process.env.REACT_APP_URL_API}/v1/storage`, {
+    headers: {
+      Authorization: `Bearer ${process.env.REACT_APP_TOKEN_API}`
+    }
+  })
+
+  const storages = await storage.json().then(json => {
+    return pluck(['id', 'name'], json).map(i => {
+      i['label'] = i['name']
+      i['value'] = i['id']
+      delete i['name']
+      delete i['id']
+
+      return i
+    })
+  })
+
+  const users = await user.json().then(json => {
+    return pluck(['id', 'name'], json).map(i => {
+      i['label'] = i['name']
+      i['value'] = i['id']
+      delete i['name']
+      delete i['id']
+
+      return i
+    })
+  })
+
+
   const analyses = await analysis.json().then(json => {
     return pluck(['id', 'name', 'sample_type'], json).map(i => {
-      i['label'] = i['name'] + " - " + i['sample_type']
+      i['label'] = i['name']
+      i['value'] = i['id']
       delete i['name']
-      
+      delete i['id']
+
       return i
     })
   })
 
   return {
     props: {
-      analyses
+      analyses,
+      users,
+      storages
     }
   }
 }
